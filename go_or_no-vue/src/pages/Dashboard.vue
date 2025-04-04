@@ -26,6 +26,13 @@
       </div>
     </div>
 
+    <!-- -------- test code -------- -->
+    <div>
+      <p>{{ message }}</p>
+      <button @click="fetchHello">서버에서 메시지 가져오기</button>
+    </div>
+    <!-- -------- test code -------- -->
+
     <!--Charts-->
     <div class="row">
       <div class="col-12">
@@ -86,6 +93,9 @@
 <script>
 import { StatsCard, ChartCard } from "@/components/index";
 import Chartist from "chartist";
+/* -------- test code -------- */
+import axios from "axios";
+/* -------- test code -------- */
 export default {
   components: {
     StatsCard,
@@ -199,8 +209,26 @@ export default {
         },
         options: {},
       },
+      /* -------- test code -------- */
+      message: ""
+      /* -------- test code -------- */
     };
   },
+  /* -------- test code -------- */
+  methods: {
+    async fetchHello() {
+      try {
+        const res = await axios.get("http://localhost:8090/api/hello")
+        this.message = res.data
+      } catch (error) {
+        console.error("API 호출 실패:", error)
+      }
+    }
+  },
+  mounted() {
+    this.fetchHello()
+  }
+  /* -------- test code -------- */
 };
 </script>
 <style></style>
