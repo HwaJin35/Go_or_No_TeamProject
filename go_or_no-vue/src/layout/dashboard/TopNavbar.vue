@@ -19,15 +19,16 @@
         <ul class="navbar-nav ml-auto">
           <!-- Stats -->
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="ti-panel"></i>
-              <p>Stats</p>
-            </a>
+            <router-link to="/stats" class="nav-link">
+              <i class="ti-user"></i>
+              <p>마이페이지</p>
+            </router-link>
           </li>
           <!-- 드롭다운 -->
+          <!-- 개수 동적 코딩 -->
           <drop-down
             class="nav-item"
-            title="5 Notifications"
+            title="알림"
             title-classes="nav-link"
             icon="ti-bell"
           >
@@ -37,11 +38,11 @@
             <a class="dropdown-item" href="#">Notification 4</a>
             <a class="dropdown-item" href="#">Another notification</a>
           </drop-down>
-          <!-- 설정 -->
+          <!-- UI 색상 변경 -->
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="ti-settings"></i>
-              <p>Settings</p>
+              <i class="ti-eye"></i>
+              <p>보기 모드 변경</p>
             </a>
           </li>
         </ul>

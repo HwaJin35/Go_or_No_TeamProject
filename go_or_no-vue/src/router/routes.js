@@ -9,7 +9,13 @@ import Notifications from "@/pages/Notifications.vue";
 import Icons from "@/pages/Icons.vue";
 import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
-import TableList from "@/pages/TableList.vue";
+import MyPlace from "@/pages/MyPlace.vue";
+import Notice from "@/pages/Notice.vue";
+import Community from "@/pages/Community.vue";
+import Favorites from "@/pages/Favorites.vue";
+import Message from "@/pages/Message.vue";
+import Popularity from "@/pages/Popularity.vue";
+
 
 const routes = [
   {
@@ -19,17 +25,47 @@ const routes = [
     children: [
       {
         path: "maps",
-        name: "maps",
+        name: "📌 click on the map to drop a pin  ",
         component: Maps,
       },
       {
+        path: "my-place",
+        name: "나의 장소",
+        component: MyPlace,
+      },
+      {
+        path: "notice",
+        name: "공지사항",
+        component: Notice,
+      },
+      {
+        path: "community",
+        name: "지역별 커뮤니티",
+        component: Community,
+      },
+      {
+        path: "popularity",
+        name: "인기순 정렬",
+        component: Popularity,
+      },
+      {
+        path: "favorites",
+        name: "즐겨찾기",
+        component: Favorites,
+      },
+      {
+        path: "message",
+        name: "실시간 메시지",
+        component: Message,
+      },
+      {
         path: "dashboard",
-        name: "dashboard",
+        name: "관리자 페이지",
         component: Dashboard,
       },
       {
         path: "stats",
-        name: "stats",
+        name: "마이페이지",
         component: UserProfile,
       },
       {
@@ -46,11 +82,6 @@ const routes = [
         path: "typography",
         name: "typography",
         component: Typography,
-      },
-      {
-        path: "table-list",
-        name: "table-list",
-        component: TableList,
       },
     ],
   },

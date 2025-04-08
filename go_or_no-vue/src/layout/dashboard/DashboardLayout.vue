@@ -3,30 +3,36 @@
     <!-- 사이드바 메뉴 -->
     <side-bar>
       <template slot="links">
-        <sidebar-link to="/maps" name="Map" icon="ti-map" />
-        <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
-        <sidebar-link to="/stats" name="User Profile" icon="ti-user" />
+        <sidebar-link to="/maps" name="Map" icon="ti-map-alt" />
+        <sidebar-link to="/my-place" name="나의 장소" icon="ti-pin-alt" />
+        <sidebar-link to="/notice" name="공지사항" icon="ti-receipt" />
+        <sidebar-link to="/community" name="지역별 커뮤니티" icon="ti-view-grid" />
         <sidebar-link
-          to="/table-list"
-          name="Table List"
-          icon="ti-view-list-alt"
+        to="/popularity"
+        name="인기순 정렬"
+        icon="ti-exchange-vertical"
         />
-        <sidebar-link to="/typography" name="Typography" icon="ti-text" />
-        <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
-        <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
+        <sidebar-link to="/favorites" name="즐겨찾기(수정 및 네비 연동)" icon="ti-star" />
+        <sidebar-link to="/message" name="실시간 메시지" icon="ti-themify-favicon-alt" />
+        <sidebar-link to="/dashboard" name="관리자 페이지" icon="ti-dashboard" />
+        <!-- <sidebar-link to="/stats" name="User Profile(네비로 이동)" icon="ti-user" /> -->
+        <sidebar-link to="/typography" name="Typography(삭제 예정)" icon="ti-text" />
+        <sidebar-link to="/icons" name="Icons(삭제 예정)" icon="ti-pencil-alt2" />
+        <sidebar-link to="/notifications" name="Notifications(삭제 예정)" icon="ti-bell" />
       </template>
       <!-- 모바일 환경 사이드바 메뉴 -->
       <mobile-menu>
         <li class="nav-item">
-          <a class="nav-link">
-            <i class="ti-panel"></i>
-            <p>Stats</p>
-          </a>
+          <router-link to="/stats" class="nav-link">
+              <i class="ti-user"></i>
+              <p>마이페이지</p>
+            </router-link>
         </li>
+        <!-- 알림 개수 동적 코딩 -->
         <drop-down
           class="nav-item"
-          title="5 Notifications"
-          title-classes="nav-link"
+          title="알림"
+          title-classes="nav-link d-flex align-items-center gap-1"
           icon="ti-bell"
         >
           <a class="dropdown-item">Notification 1</a>
@@ -37,8 +43,8 @@
         </drop-down>
         <li class="nav-item">
           <a class="nav-link">
-            <i class="ti-settings"></i>
-            <p>Settings</p>
+            <i class="ti-eye"></i>
+            <p>보기 모드 변경</p>
           </a>
         </li>
         <li class="divider"></li>

@@ -1,5 +1,5 @@
 <template>
-  <card class="card-map" title="카카오 맵">
+  <card class="card-map">
     <div class="map">
       <div id="map"></div>
     </div>

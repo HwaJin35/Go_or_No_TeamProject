@@ -9,14 +9,18 @@
         </ul>
       </nav>
       <div class="copyright d-flex flex-wrap">
-        &copy; Coded with
-        <i class="fa fa-heart heart"></i> by
-        <a href="https://github.com/cristijora" target="_blank">
-          &nbsp; Cristi Jora.</a
-        >&nbsp; Designed by
-        <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank"
-          >&nbsp; Creative Tim.</a
+        깃허브 주소는 이름을 클릭해 주세요. &copy; Coded with
+        <span>
+          <i class="fa fa-user" style="color: orange; margin-right: -10px"></i>
+          <i class="fa fa-user" style="color: slateblue"></i>
+        </span>
+          by
+        <a href="https://github.com/HwaJin35/Go_or_No_TeamProject" target="_blank">
+          &nbsp; 정화진 & 어도하</a
         >
+        <span>
+          <i class="fa fa-flag"></i>
+        </span>
       </div>
     </div>
   </footer>
