@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
+    <!-- 사이드바 메뉴 -->
     <side-bar>
       <template slot="links">
+        <sidebar-link to="/maps" name="Map" icon="ti-map" />
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
         <sidebar-link to="/stats" name="User Profile" icon="ti-user" />
         <sidebar-link
@@ -11,9 +13,9 @@
         />
         <sidebar-link to="/typography" name="Typography" icon="ti-text" />
         <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
-        <sidebar-link to="/maps" name="Map" icon="ti-map" />
         <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
       </template>
+      <!-- 모바일 환경 사이드바 메뉴 -->
       <mobile-menu>
         <li class="nav-item">
           <a class="nav-link">
@@ -42,6 +44,7 @@
         <li class="divider"></li>
       </mobile-menu>
     </side-bar>
+    <!-- 대시보드 메인 화면 레이아웃 -->
     <div class="main-panel">
       <top-navbar></top-navbar>
 

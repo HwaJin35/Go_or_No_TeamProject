@@ -1,3 +1,4 @@
+<!-- 대시보드 세부 메뉴 상단 -->
 <template>
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
@@ -13,14 +14,17 @@
         <span class="navbar-toggler-bar"></span>
         <span class="navbar-toggler-bar"></span>
       </button>
+      <!-- Navbar 우측 메뉴 -->
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
+          <!-- Stats -->
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="ti-panel"></i>
               <p>Stats</p>
             </a>
           </li>
+          <!-- 드롭다운 -->
           <drop-down
             class="nav-item"
             title="5 Notifications"
@@ -33,6 +37,7 @@
             <a class="dropdown-item" href="#">Notification 4</a>
             <a class="dropdown-item" href="#">Another notification</a>
           </drop-down>
+          <!-- 설정 -->
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="ti-settings"></i>
