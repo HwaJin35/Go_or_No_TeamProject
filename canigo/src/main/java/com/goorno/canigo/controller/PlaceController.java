@@ -18,13 +18,14 @@ import com.goorno.canigo.service.PlaceService;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "http://localhost:8080")
-@RestController
-@RequiredArgsConstructor
+@RestController // 모든 메서드는 자동으로 @ReponseBody가 적용되어 JSON으로 반환
+@RequiredArgsConstructor // final로 선언된 필드를 자동으로 생성자 주입
 @RequestMapping("/api/places")
 public class PlaceController {
 
 	private final PlaceService placeService;
 	
+	// 클라이언트에서 multipart/form-data 형식으로 보낼 때만 이 메서드가 실행됨
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> registerPlace(@ModelAttribute PlaceMultipartDTO dto) {
 		try {
