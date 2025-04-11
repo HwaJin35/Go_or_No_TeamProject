@@ -1,4 +1,4 @@
-package com.goorno.canigo.dto;
+package com.goorno.canigo.common.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

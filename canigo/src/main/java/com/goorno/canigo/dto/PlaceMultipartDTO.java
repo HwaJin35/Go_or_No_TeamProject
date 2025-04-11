@@ -1,5 +1,7 @@
 package com.goorno.canigo.dto;
 
+import com.goorno.canigo.common.dto.CommonMultipartDTO;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class PlaceMultipartDTO extends CommonMultipartDTO {
 	private String name; // 장소 이름
+	private String description; // 장소 설명
 	private Double latitude; // 위도
 	private Double longitude; // 경도
 }
