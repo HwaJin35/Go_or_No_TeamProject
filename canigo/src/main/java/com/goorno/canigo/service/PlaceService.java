@@ -2,6 +2,7 @@ package com.goorno.canigo.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -46,5 +47,9 @@ public class PlaceService {
 		place.setImageUrl(imageUrl); // null이어도 OK
 
 		return placeRepository.save(place);
+	}
+	
+	public List<Place> getAllPlaces() {
+		return placeRepository.findAll();
 	}
 }
