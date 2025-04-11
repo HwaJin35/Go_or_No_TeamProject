@@ -1,4 +1,4 @@
-package com.goorno.canigo.entity;
+package com.goorno.canigo.common.entity;
 
 import java.time.LocalDateTime;
 

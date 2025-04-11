@@ -41,6 +41,7 @@ public class PlaceService {
 		
 		Place place = new Place();
 		place.setName(dto.getName());
+		place.setDescription(dto.getDescription());
 		place.setLatitude(dto.getLatitude());
 		place.setLongitude(dto.getLongitude());
 		place.setImageUrl(imageUrl); // null이어도 OK
