@@ -1,7 +1,5 @@
 package com.goorno.canigo.entity;
 
-
-
 import com.goorno.canigo.common.entity.BaseEntity;
 import com.goorno.canigo.entity.enums.AuthProviderType;
 
@@ -25,11 +23,12 @@ public class User extends BaseEntity {
 	private Long id;
 	
 	// 이메일 (nullable: 카카오 로그인 시 없을 수도 있음)
-	@Column(unique = true, nullable = true)
+	@Column(nullable = true, unique = true)
 	private String email;
 	
 	// 비밀번호 (일반 로그인 사용자만 사용, 카카오 로그인은 null 허용)
 	// 비밀번호는 BCrypt로 암호화해서 저장
+	// @@@ 비밀번호 확인 추가
 	private String password;
 	
 	// 닉네임
@@ -37,6 +36,7 @@ public class User extends BaseEntity {
 	private String nickname;
 	
 	// 프로필 이미지
+	// DTO 추가?
 	private String profileImageUrl;
 	
 	// 로그인 방식 (LOCAL, KAKAO)

@@ -20,6 +20,7 @@ import lombok.Setter;
 )
 public class PlaceLikeDislike extends BaseLikeDislike {
 
+	// 좋아요 or 싫어요 대상 장소
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;

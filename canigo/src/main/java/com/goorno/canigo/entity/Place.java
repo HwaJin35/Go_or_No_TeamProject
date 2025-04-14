@@ -42,14 +42,18 @@ public class Place extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	// 장소명
 	private String name;
 	
+	// 장소 설명
 	@Column(length = 1000)
 	private String description;
 	
+	// 장소 위도/경도
 	private Double latitude;
 	private Double longitude;
 	
+	// 장소 이미지
 	private String imageUrl;
 	
 	// 장소 등록자 정보

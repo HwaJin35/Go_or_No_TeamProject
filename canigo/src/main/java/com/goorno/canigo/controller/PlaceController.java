@@ -37,6 +37,7 @@ public class PlaceController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 실패");
 		}
 	}
+	
 	@GetMapping
 	public List<Place> getAllPlaces(){
 		return placeService.getAllPlaces();

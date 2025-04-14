@@ -32,7 +32,7 @@ public abstract class BaseReport extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
-    // 신고 사유 (욕설, 음란물 등 -> 추후 enum으로도 변경 가능)
+    // 신고 사유
     @Enumerated(EnumType.STRING)
     @Column(name = "reason", nullable = false)
     private ReportReason reason;

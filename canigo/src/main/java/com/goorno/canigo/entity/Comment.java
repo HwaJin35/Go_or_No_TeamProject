@@ -31,6 +31,7 @@ public class Comment extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	// 댓글 내용
 	@Lob
 	private String content;
 	
@@ -49,16 +50,20 @@ public class Comment extends BaseEntity {
 	@JoinColumn(name = "parent_id")
 	private Comment parent;
 	
+	// 이 댓글의 대댓글 조회
 	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore // 순환 참조 문제 방지(?)
 	private List<Comment> children = new ArrayList<>();
 	
+	// 좋아요/싫어요
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CommentLikeDislike> likeDislikes = new ArrayList<>();
 	
+	// 신고
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CommentReport> reports = new ArrayList<>();
 
+	// 차단
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentBan> bans = new ArrayList<>();
 }
