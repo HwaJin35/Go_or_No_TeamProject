@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goorno.canigo.dto.PlaceMultipartDTO;
+import com.goorno.canigo.dto.place.PlaceRequestDTO;
 import com.goorno.canigo.entity.Place;
 import com.goorno.canigo.service.PlaceService;
 
@@ -29,7 +29,7 @@ public class PlaceController {
 	
 	// 클라이언트에서 multipart/form-data 형식으로 보낼 때만 이 메서드가 실행됨
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> registerPlace(@ModelAttribute PlaceMultipartDTO dto) {
+	public ResponseEntity<?> registerPlace(@ModelAttribute PlaceRequestDTO dto) {
 		try {
 			Place place = placeService.savePlace(dto);
 			return ResponseEntity.ok(place);

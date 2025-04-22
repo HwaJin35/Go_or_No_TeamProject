@@ -1,14 +1,12 @@
 package com.goorno.canigo.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.goorno.canigo.dto.PlaceMultipartDTO;
+import com.goorno.canigo.common.util.Base64Util;
+import com.goorno.canigo.dto.place.PlaceRequestDTO;
 import com.goorno.canigo.entity.Place;
 import com.goorno.canigo.repository.PlaceRepository;
 
@@ -20,32 +18,18 @@ public class PlaceService {
 	
 	private final PlaceRepository placeRepository;
 	
-	public Place savePlace(PlaceMultipartDTO dto) throws IOException {
-		// 저정할 디렉토리
-		String uploadDir = "/upload/";
-		String imageUrl = null;
-		
-		MultipartFile image = dto.getImage();
-		if (image != null && !image.isEmpty()) {
-			String filename = UUID.randomUUID() + "_" + dto.getImage().getOriginalFilename();
-			File file = new File(uploadDir + filename);
-			
-			// 디렉토리 없으면 생성
-			File dir = new File(uploadDir);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			image.transferTo(file);
-			imageUrl = "/upload/" + filename;
-			
-		}
-		
+	
+	public Place savePlace(PlaceRequestDTO dto) throws IOException {
 		Place place = new Place();
 		place.setName(dto.getName());
 		place.setDescription(dto.getDescription());
 		place.setLatitude(dto.getLatitude());
 		place.setLongitude(dto.getLongitude());
-		place.setImageUrl(imageUrl); // null이어도 OK
+		
+		// 업로드 파일을 Base64로 변환하는 메서드 호출
+		List<String> uploadFiles = Base64Util.encodeFilesToBase64(dto.getFiles());
+		place.setUploadFiles(uploadFiles); // 다중 파일 저장
+		
 
 		return placeRepository.save(place);
 	}

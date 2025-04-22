@@ -5,23 +5,31 @@ import java.util.List;
 
 import com.goorno.canigo.common.entity.BaseEntity;
 import com.goorno.canigo.entity.ban.PlaceBan;
+import com.goorno.canigo.entity.enums.CategoryType;
 import com.goorno.canigo.entity.favorite.PlaceFavorite;
 import com.goorno.canigo.entity.like.PlaceLikeDislike;
 import com.goorno.canigo.entity.report.PlaceReport;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,8 +39,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor   // 기본 생성자 (파라미터 없는 생성자)를 자동 생성
+@AllArgsConstructor	 // 모든 필드를 파라미터로 받는 생성자를 자동 생성
+@Builder			 // 빌더 패턴을 자동 생성
 @Table(name="places", uniqueConstraints= {
 		@UniqueConstraint(columnNames = {"latitude", "longitude"})
 })	// 위도, 경도 유니크화
@@ -53,8 +62,18 @@ public class Place extends BaseEntity {
 	private Double latitude;
 	private Double longitude;
 	
-	// 장소 이미지
-	private String imageUrl;
+	// 장소 이미지(다중)
+	@ElementCollection
+	@CollectionTable(
+		name = "place_files",
+		joinColumns = @JoinColumn(name = "place_id")
+	)
+	@Column(name = "upload_file")
+	private List<String> uploadFiles;
+	
+	// 장소 카테고리
+	@Enumerated(EnumType.STRING) // ENUM 값이 DB에 문자열로 저장되도록 지정
+	private CategoryType category;
 	
 	// 장소 등록자 정보
 	// 내 클래스가 Many, 상대방이 One
@@ -85,4 +104,13 @@ public class Place extends BaseEntity {
 	// 즐겨찾기
 	@OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PlaceFavorite> favorites = new ArrayList<>();
+	
+	// 해시태그
+	@ManyToMany
+	@JoinTable(
+		name = "place_hashtag",
+		joinColumns = @JoinColumn(name = "place_id"), // 현재 엔티티의 외래키
+		inverseJoinColumns = @JoinColumn(name = "hashtag_id") // 반대편 엔티티의 외래키
+	)
+	private List<Hashtag> hashtags = new ArrayList<>();
 }

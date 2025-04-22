@@ -16,10 +16,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +32,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Review extends BaseEntity {
 
 	@Id
@@ -43,7 +47,8 @@ public class Review extends BaseEntity {
 	private String content;
 	
 	// 리뷰 (상세보기) 이미지
-	private String imageUrl;
+	@Lob
+	private String uploadFile;
 	
 	// 리뷰 작성자
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -74,5 +79,18 @@ public class Review extends BaseEntity {
 	// 즐겨찾기
 	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ReviewFavorite> favorites = new ArrayList<>();
+	
+	// 해시태그
+	@ManyToMany
+	@JoinTable(
+		name = "review_hashtag",
+		joinColumns = @JoinColumn(name = "review_id"),
+		inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+	)
+	private List<Hashtag> hashtags = new ArrayList<>();
+	
+	// 멘션
+	@OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+	private List<Mention> mentions = new ArrayList<>();
 	
 }

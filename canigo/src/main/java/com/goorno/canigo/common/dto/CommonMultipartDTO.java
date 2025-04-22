@@ -1,5 +1,7 @@
 package com.goorno.canigo.common.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
@@ -7,8 +9,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CommonMultipartDTO {
-	private MultipartFile image;
+public abstract class CommonMultipartDTO {
+	private List<MultipartFile> files;
 	// 업로드할 이미지 파일 담는 필드
 	// 스프링이 자동으로 처리 해준다.
 }
