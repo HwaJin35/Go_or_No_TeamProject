@@ -1,4 +1,4 @@
-package com.goorno.canigo.admin.service;
+package com.goorno.canigo.unit.admin.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.goorno.canigo.admin.service.AdminUserService;
 import com.goorno.canigo.entity.User;
 import com.goorno.canigo.entity.enums.AuthProviderType;
 import com.goorno.canigo.entity.enums.Status;
@@ -61,7 +62,7 @@ public class AdminUserServiceTest {
 	}
 	
 	@Test
-	public void testDeleteUserById() {
+	public void testDeleteUserByEmail() {
 		// 해당 이메일을 찾음
 		User user = userRepository.findByEmail("testuser1@example.com")
 				.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));

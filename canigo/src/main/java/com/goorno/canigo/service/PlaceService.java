@@ -18,7 +18,7 @@ public class PlaceService {
 	
 	private final PlaceRepository placeRepository;
 	
-	
+	// 장소 저장 메서드
 	public Place savePlace(PlaceRequestDTO dto) throws IOException {
 		Place place = new Place();
 		place.setName(dto.getName());
@@ -30,10 +30,10 @@ public class PlaceService {
 		List<String> uploadFiles = Base64Util.encodeFilesToBase64(dto.getFiles());
 		place.setUploadFiles(uploadFiles); // 다중 파일 저장
 		
-
 		return placeRepository.save(place);
 	}
 	
+	// 모든 장소 조회 메서드
 	public List<Place> getAllPlaces() {
 		return placeRepository.findAll();
 	}

@@ -27,6 +27,7 @@ public class PlaceController {
 
 	private final PlaceService placeService;
 	
+	// 장소 등록 메서드
 	// 클라이언트에서 multipart/form-data 형식으로 보낼 때만 이 메서드가 실행됨
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> registerPlace(@ModelAttribute PlaceRequestDTO dto) {
@@ -38,6 +39,7 @@ public class PlaceController {
 		}
 	}
 	
+	// 모든 장소 조회 메서드
 	@GetMapping
 	public List<Place> getAllPlaces(){
 		return placeService.getAllPlaces();
