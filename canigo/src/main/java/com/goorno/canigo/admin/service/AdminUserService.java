@@ -34,7 +34,7 @@ public class AdminUserService {
 			user.setStatus(status);
 			
 			// 차단 상태인 경우
-			if (status == Status.BANNED) {
+			if (status == Status.BLOCKED) {
 				user.setBanStartDate(LocalDateTime.now());
 				user.setBanEndDate(LocalDateTime.now().plusDays(banDurationDays));
 				user.setBanDurationDays(banDurationDays);
@@ -49,7 +49,7 @@ public class AdminUserService {
 	
 	// 차단 기간 만료 체크
 	public void checkBanStatus() {
-		List<User> bannedUsers = userRepository.findByStatus(Status.BANNED);
+		List<User> bannedUsers = userRepository.findByStatus(Status.BLOCKED);
 		for (User user : bannedUsers) {
 			if (user.getBanEndDate().isBefore(LocalDateTime.now())) {
 				user.setStatus(Status.ACTIVE); // 차단 해제

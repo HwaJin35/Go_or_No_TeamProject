@@ -57,14 +57,14 @@ public class AdminUserServiceTest {
 				.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 		
 		// 사용자의 상태를 변경하고, 변경된 상태를 DB에 반영
-		adminUserService.updateUserStatus(user.getId(), Status.BANNED, 3);
+		adminUserService.updateUserStatus(user.getId(), Status.BLOCKED, 3);
 		
 		// DB에서 다시 가져와 상태를 확인
 		User updatedUser = userRepository.findById(user.getId())
 				.orElseThrow(() -> new IllegalArgumentException("업데이트 후 사용자를 찾을 수 없습니다."));
 		
 		// 사용자의 상태가 업데이트 되었는지 비교함
-		assertEquals(Status.BANNED, updatedUser.getStatus());
+		assertEquals(Status.BLOCKED, updatedUser.getStatus());
 	}
 	
 	@Test
