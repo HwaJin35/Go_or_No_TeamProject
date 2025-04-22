@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="['content', isFullMap? 'full-map-layout' : '']">
     <div class="container-fluid">
       <!-- 페이지가 변경될 때 페이드 효과 적용 -->
       <transition name="fade" mode="out-in">
@@ -11,7 +11,13 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  computed: {
+    isFullMap() {
+      return this.$route.meta.fullMap === true;
+    }
+  }
+};
 </script>
 <style>
 .fade-enter-active,
@@ -23,5 +29,10 @@ export default {};
   .fade-leave-to
   /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
+}
+.full-map-layout {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100vh;
 }
 </style>

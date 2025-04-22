@@ -1,19 +1,20 @@
 <template>
-  <card class="card-map">
+  <div class="map-page" >
     <!-- ref: DOM 요소를 Vue에서 직접 접근 가능토록 함 -->
     <!-- ref로 설정한 DOM 요소는 JS에서 this.$refs.____로 접근 가능 -->
     <!-- 지도를 표시할 영역 -->
-    <div class="map" ref="mapContainer"></div>
-    <!-- 현재 위치로 이동 버튼 -->
-    <button class="btn-current-location" @click="goToCurrentLocation">
+    <div class="map" ref="mapContainer">
+      <!-- 현재 위치로 이동 버튼 -->
+      <button class="btn-current-location" @click="goToCurrentLocation">
       📍 현재 위치로 이동
-    </button>
-    <!-- 현재 선택된 위/경도 표시 -->
-    <div id="clickLatlng">
+      </button>
+      <!-- 현재 선택된 위/경도 표시 -->
+      <div id="clickLatlng">
       <!-- computed에서 계산된 값을 변수명으로 사용  -->
-      클릭한 위치의 위도는 {{ selectedLat }} 이고, 경도는 {{ selectedLng }} 입니다.
+        클릭한 위치의 위도는 {{ selectedLat }} 이고, 경도는 {{ selectedLng }} 입니다.
+      </div>
     </div>
-  </card>
+  </div>
 </template>
   
   <!-- <script>(Javascript 역할): 데이터를 관리하거나, 로직(이벤트, API 요청 등)을 처리   -->
@@ -217,9 +218,21 @@ export default {
 </script>
   
 <style scoped>
+.map-page{
+  width: 100%;
+  height: 83vh;
+  position: relative;
+}
+.map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 .btn-current-location {
-  bottom: 12px;
-  right: 12px;
+  position: absolute;
+  bottom: 75px;
+  left: 20px;
+  z-index: 10;
   padding: 8px 12px;
   background-color: white;
   border: 1px solid #ccc;
@@ -230,5 +243,15 @@ export default {
 }
 .btn-current-location:hover {
   background-color: #f2f2f2;
+}
+#clickLatlng {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255,255,255,0.9);
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 10;
 }
 </style>

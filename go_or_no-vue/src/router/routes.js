@@ -27,6 +27,7 @@ const routes = [
         path: "maps",
         name: "📌 click on the map to drop a pin  ",
         component: Maps,
+        meta: { fullMap: true }
       },
       {
         path: "my-place",
