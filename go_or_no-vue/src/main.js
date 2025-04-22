@@ -19,6 +19,7 @@ import router from "./router/index";
 
 import PaperDashboard from "./plugins/paperDashboard";
 import "vue-notifyjs/themes/default.css";
+import "@/assets/sass/map-element.scss";
 
 // 전역 등록
 Vue.use(PaperDashboard);
