@@ -25,6 +25,9 @@ public class AdminUserServiceTest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	// this 사용을 위해 전역 변수화
+	Long userId;
+	
 	@BeforeEach	// 각 테스트 메서드가 실행되기 전에
 				// 실행될 메서드를 지정하는 역할. 즉, 초기화 작업이나 설정 작업
 	public void setUp() {
@@ -41,7 +44,10 @@ public class AdminUserServiceTest {
 				.status(Status.ACTIVE)
 				.build();
 		
-		userRepository.save(user1);
+		User newUser = userRepository.save(user1);
+		
+		// 전역 변수로 Id 사용
+		this.userId = newUser.getId();
 	}
 	
 	@Test
@@ -63,9 +69,12 @@ public class AdminUserServiceTest {
 	
 	@Test
 	public void testDeleteUserByEmail() {
-		// 해당 이메일을 찾음
-		User user = userRepository.findByEmail("testuser1@example.com")
-				.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+//		// 해당 이메일을 찾음
+//		User user = userRepository.findByEmail("testuser1@example.com")
+//				.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+		
+		// 해당 Id 찾음
+		User user = userRepository.findById(userId).orElseThrow();
 		
 		// 사용자 삭제
 		adminUserService.deleteUser(user.getId());
