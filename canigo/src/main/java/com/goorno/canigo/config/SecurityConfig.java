@@ -14,14 +14,20 @@ public class SecurityConfig {
 	
 	// Spring Security 5.7 이후부터는
 	// WebSecurityConfigurerAdapter를 사용하지 않고,
-	// SecurityFilterChain을 직접 Beand로 등록하는 방식이 권장
+	// SecurityFilterChain을 직접 Bean으로 등록하는 방식이 권장
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
         	.cors(Customizer.withDefaults()) // CORS를 기본 설정으로 활성화
             .csrf().disable() // CSRF 보호 기능을 끈다.(JWT 사용 시 일반적으로 끔)
             .authorizeHttpRequests() // 요청 경로에 따라 인증 여부 설정
-                .requestMatchers("/api/**").permitAll() // API는 인증 없이 허용
+                .requestMatchers(
+                		"/api/**",				// API는 인증 없이 허용
+                		"/v3/api-docs/**",		// swagger URL은 인증없이 허용
+                		"/swagger-ui/**",
+                		"/swagger-ui.html",
+                		"/actuator/**"			// actuator는 인증 없이 허용
+                		).permitAll()
                 .anyRequest().authenticated()
             .and()
             .formLogin(); // 기본 로그인 폼 사용

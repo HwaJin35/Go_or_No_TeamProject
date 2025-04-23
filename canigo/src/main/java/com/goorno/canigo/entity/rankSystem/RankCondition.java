@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +30,5 @@ public class RankCondition {
 	private Integer minimumScore;
 	
 	// 등급의 정렬 순서 (낮을수록 상단)
-	private Integer order;
+	private Integer sortNum;
 }
