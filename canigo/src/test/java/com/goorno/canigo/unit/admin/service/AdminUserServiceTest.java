@@ -7,9 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.goorno.canigo.admin.service.AdminUserService;
+import com.goorno.canigo.common.aspect.logging.LoggingAspect;
 import com.goorno.canigo.entity.User;
 import com.goorno.canigo.entity.enums.AuthProviderType;
 import com.goorno.canigo.entity.enums.Status;
@@ -17,6 +20,8 @@ import com.goorno.canigo.repository.UserRepository;
 
 @SpringBootTest
 @ActiveProfiles("test") // "test" 프로파일을 활성화 application-test.properties
+@Import({LoggingAspect.class})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AdminUserServiceTest {
 
 	@Autowired
