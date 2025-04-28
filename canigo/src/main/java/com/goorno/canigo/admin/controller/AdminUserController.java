@@ -28,7 +28,7 @@ public class AdminUserController {
 	
 	// 회원 목록 조회
 	@GetMapping
-	public List<User> getAllUsers() {		
+	public List<User> getAllUsers() {
 		return adminUserService.getAllUsers();
 	}
 	
