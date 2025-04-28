@@ -65,6 +65,11 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	private AuthProviderType authProvider;
 	
+	// 인증여부
+	// 로그인 방식이 LOCAL 이면 이메일 인증, KAKAO면 카카오 인증을 받은 후 true
+	@Column(nullable = false)
+	private boolean isVerified = false;
+	
 	// 등급
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
 				orphanRemoval = true, fetch = FetchType.LAZY)
@@ -72,8 +77,8 @@ public class User extends BaseEntity {
 	
 	// 활동 기록
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-
 	private List<UserActivity> activityList = new ArrayList<>();
+	
 	// 활성화 여부 (활성화, 비활성화, 차단, 탈퇴)
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
