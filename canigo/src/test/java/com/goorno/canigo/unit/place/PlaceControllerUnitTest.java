@@ -1,4 +1,4 @@
-package com.goorno.canigo.unit.controller.place;
+package com.goorno.canigo.unit.place;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;

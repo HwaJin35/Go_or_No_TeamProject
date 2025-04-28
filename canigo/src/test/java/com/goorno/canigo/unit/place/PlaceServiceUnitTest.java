@@ -1,4 +1,4 @@
-package com.goorno.canigo.unit.service.place;
+package com.goorno.canigo.unit.place;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

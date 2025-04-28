@@ -1,4 +1,4 @@
-package com.goorno.canigo.integration.controller.place;
+package com.goorno.canigo.integration.place;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
