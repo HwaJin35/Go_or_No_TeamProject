@@ -2,6 +2,7 @@ package com.goorno.canigo.common.exception.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -46,6 +47,13 @@ public class GlobalExceptionHandler {
 				.orElse("유효성 검증 실패");
 		log.warn("Validation Error: {}", errorMessage);
 		return buildErrorResponse(HttpStatus.BAD_REQUEST, errorMessage, request.getRequestURI());
+	}
+	
+	// BadCredentialsException (비밀번호 틀림) 처리
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+		log.warn("BadCredentialsException: {}", ex.getMessage());
+		return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI());
 	}
 	
 	// 그 외 Exception

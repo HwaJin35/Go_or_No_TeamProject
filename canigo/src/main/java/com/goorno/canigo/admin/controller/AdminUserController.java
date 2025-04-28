@@ -16,7 +16,7 @@ import com.goorno.canigo.entity.User;
 import com.goorno.canigo.entity.enums.Status;
 
 @RestController
-@RequestMapping("/admin/users")
+@RequestMapping("/api/admin/users")
 public class AdminUserController {
 
 	private final AdminUserService adminUserService;

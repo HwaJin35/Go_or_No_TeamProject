@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -22,7 +23,7 @@ import com.goorno.canigo.repository.UserRepository;
 @ActiveProfiles("test") // "test" 프로파일을 활성화 application-test.properties
 @Import({LoggingAspect.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-public class AdminUserServiceTest {
+public class AdminUserServiceUnitTest {
 
 	@Autowired
 	private AdminUserService adminUserService;
@@ -44,7 +45,7 @@ public class AdminUserServiceTest {
 				.email("testuser1@example.com")
 				.nickname("testuser1")
 				.password("password1") // 실제로는 BCrypt로 암호화 필요
-				.profileImageFile("profile1.png")
+//				.profileImageFile("profile1.png")
 				.authProvider(AuthProviderType.LOCAL)
 				.status(Status.ACTIVE)
 				.build();

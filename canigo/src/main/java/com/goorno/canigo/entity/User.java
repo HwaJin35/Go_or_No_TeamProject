@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.goorno.canigo.common.entity.BaseEntity;
 import com.goorno.canigo.entity.enums.AuthProviderType;
+import com.goorno.canigo.entity.enums.Role;
 import com.goorno.canigo.entity.enums.Status;
 import com.goorno.canigo.entity.rankSystem.Rank;
 import com.goorno.canigo.entity.rankSystem.UserActivity;
@@ -19,6 +20,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -55,8 +57,8 @@ public class User extends BaseEntity {
 	private String nickname;
 	
 	// 프로필 이미지
-	// DTO 추가?
-	private String profileImageFile;
+    @Lob
+	private String profileImageBase64;
 	
 	// 로그인 방식 (LOCAL, KAKAO)
 	@Enumerated(EnumType.STRING)
@@ -86,4 +88,10 @@ public class User extends BaseEntity {
 	
 	// 차단된 기간 (옵션: 수동 차단 기간 설정 시 사용)
 	private Integer banDurationDays; // 차단 기간 (일수 기준)
-}
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	
+	@Column(columnDefinition = "TEXT", length=300)
+	private String aboutMe;
+	}
