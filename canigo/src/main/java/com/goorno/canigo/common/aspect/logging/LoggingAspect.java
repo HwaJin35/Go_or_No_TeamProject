@@ -32,7 +32,7 @@ public class LoggingAspect {
 		Object[] args = joinPoint.getArgs(); // 전달된 인자들 가져오기
 		
 		// 메서드 호출 로그 출력
-		log.info("➡️ [{}} 호출됨 - 파라미터: {}", className + "." + methodName, argsToString(args));
+		log.info("➡️ [{}] 호출됨 - 파라미터: {}", className + "." + methodName, argsToString(args));
 		
 		Object result = null;
 		try {

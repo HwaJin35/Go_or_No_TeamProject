@@ -42,7 +42,7 @@ import lombok.Setter;
 @NoArgsConstructor   // 기본 생성자 (파라미터 없는 생성자)를 자동 생성
 @AllArgsConstructor	 // 모든 필드를 파라미터로 받는 생성자를 자동 생성
 @Builder			 // 빌더 패턴을 자동 생성
-@Table(name="places", uniqueConstraints= {
+@Table(name="place", uniqueConstraints= {
 		@UniqueConstraint(columnNames = {"latitude", "longitude"})
 })	// 위도, 경도 유니크화
 public class Place extends BaseEntity {

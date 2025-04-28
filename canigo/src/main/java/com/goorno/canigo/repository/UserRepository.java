@@ -15,4 +15,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	// 상태로 회원 조회
 	List<User> findByStatus(Status status);
+	
+	// 사용자 닉네임으로 삭제
+	void deleteByNickname(String nickname);
+	
+	void deleteByNicknameStartingWith(String prefix);
 }
