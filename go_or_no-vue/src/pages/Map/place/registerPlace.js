@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../../../utils/axiosInstance";
 
 /**
  * 사용자가 선택한 좌표를 서버에 장소로 등록하는 함수
@@ -20,7 +20,7 @@ export async function registerPlace(lat, lng) {
 
   try {
     // Spring 서버에 요청을 보냄
-    await axios.post("http://localhost:8090/api/places", formData, {
+    await axiosInstance.post("/api/places", formData, {
       headers: {
         // multipart/form-data 형식으로 전송
         // Spring도 이 형식을 받아낼 수 있어야 함(서로)

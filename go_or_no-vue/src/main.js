@@ -20,9 +20,11 @@ import router from "./router/index";
 import PaperDashboard from "./plugins/paperDashboard";
 import "vue-notifyjs/themes/default.css";
 import "@/assets/sass/map-element.scss";
+import Toasted from 'vue-toasted'
 
 // 전역 등록
 Vue.use(PaperDashboard);
+Vue.use(Toasted);
 
 /* eslint-disable no-new */
 new Vue({

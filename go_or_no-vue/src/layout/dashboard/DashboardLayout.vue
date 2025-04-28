@@ -47,6 +47,32 @@
             <p>보기 모드 변경</p>
           </a>
         </li>
+  <!-- 로그인 안 한 경우: 로그인, 회원가입 버튼 -->
+  <template v-if="!isLoggedIn">
+    <li class="nav-item">
+      <router-link to="/login" class="nav-link">
+        <i class="ti-lock"></i>
+        <p>로그인</p>
+      </router-link>
+    </li>
+    <li class="nav-item signup">
+      <router-link to="/signup" class="nav-link">
+        <i class="ti-pencil-alt"></i>
+        <p>회원가입</p>
+      </router-link>
+    </li>
+  </template>
+
+  <!-- 로그인 한 경우: 로그아웃 버튼 -->
+  <template v-else>
+    <li class="nav-item">
+      <a href="#" class="nav-link" @click.prevent="logout">
+        <i class="ti-unlock"></i>
+        <p>로그아웃</p>
+      </a>
+    </li>
+  </template>
+
         <li class="divider"></li>
       </mobile-menu>
     </side-bar>
@@ -66,6 +92,7 @@ import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
+import { isLoggedIn } from "../../utils/loginState";
 export default {
   components: {
     TopNavbar,
@@ -73,12 +100,23 @@ export default {
     DashboardContent,
     MobileMenu,
   },
+  computed: {
+    isLoggedIn() {
+      return isLoggedIn.value; // 전역 상태 참조
+    }
+  },
   methods: {
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false);
       }
     },
+    logout() {
+      localStorage.removeItem('accessToken');
+      isLoggedIn.value = false; // 로그아웃 시 전역 로그인 상태 false로
+      alert('로그아웃 되었습니다.');
+      this.$router.push('/');
+    }
   },
 };
 </script>

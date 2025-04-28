@@ -15,6 +15,8 @@ import Community from "@/pages/Community.vue";
 import Favorites from "@/pages/Favorites.vue";
 import Message from "@/pages/Message.vue";
 import Popularity from "@/pages/Popularity.vue";
+import Signup from "@/pages/Signup.vue";
+import Login from "@/pages/Login.vue";
 
 
 const routes = [
@@ -83,6 +85,16 @@ const routes = [
         path: "typography",
         name: "typography",
         component: Typography,
+      },
+      {
+        path: "signup",
+        name: "회원가입",
+        component: Signup,
+      },
+      {
+        path: "login",
+        name: "로그인",
+        component: Login
       },
     ],
   },

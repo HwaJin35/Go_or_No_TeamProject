@@ -45,17 +45,47 @@
               <p>보기 모드 변경</p>
             </a>
           </li>
+          <!-- 로그인 안 한 사용자: 로그인 버튼 + 회원가입 버튼 -->
+          <template v-if="!isLoggedIn">
+            <li class="nav-item">
+              <router-link to="/login" class="nav-link">
+                <i class="ti-lock"></i>
+                <p>로그인</p>
+              </router-link>
+            </li>
+            <li class="nav-item signup">
+              <router-link to="/signup" class="nav-link">
+                <i class="ti-pencil-alt"></i>
+                <p>회원가입</p>
+              </router-link>
+            </li>
+          </template>
+
+          <!-- 로그인 한 사용자: 로그아웃 버튼 -->
+          <template v-else>
+            <li class="nav-item">
+              <a href="#" class="nav-link" @click.prevent="logout">
+                <i class="ti-unlock"></i>
+                <p>로그아웃</p>
+              </a>
+            </li>
+          </template>
         </ul>
       </div>
     </div>
   </nav>
 </template>
 <script>
+import { isLoggedIn } from '../../utils/loginState';
+
 export default {
   computed: {
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
+    },
+    isLoggedIn() {
+      return isLoggedIn.value; // 항상 최신 로그인 상태
     },
   },
   data() {
@@ -78,6 +108,12 @@ export default {
     },
     hideSidebar() {
       this.$sidebar.displaySidebar(false);
+    },
+    logout() {
+      localStorage.removeItem('accessToken');
+      isLoggedIn.value = false; // 전역 상태 false로 변경
+      alert('로그아웃되었습니다.');
+      this.$router.push('/');
     },
   },
 };

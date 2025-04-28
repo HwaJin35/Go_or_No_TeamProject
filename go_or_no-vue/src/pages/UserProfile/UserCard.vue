@@ -3,27 +3,24 @@
     <div slot="image">
       <img src="@/assets/img/background.jpg" alt="..." />
     </div>
+
     <div>
       <div class="author">
         <img
           class="avatar border-white"
-          src="@/assets/img/faces/face-2.jpg"
-          alt="..."
+          :src="user.profileImageUrl || require('@/assets/img/faces/face-2.jpg')"
+          alt="프로필 사진"
         />
         <h4 class="title">
-          Chet Faker
+          {{ localUser.nickname }}
           <br />
           <a href="#">
-            <small>@chetfaker</small>
+            <small>{{ localUser.email }}</small>
           </a>
         </h4>
       </div>
-      <p class="description text-center">
-        "I like the way you work it
-        <br />
-        No diggity <br />
-        I wanna bag it up"
-      </p>
+      <div class="description text-center" v-html="localUser.aboutMe || '자기소개가 없습니다.'">
+      </div>
     </div>
     <hr />
     <div class="text-center">
@@ -45,23 +42,39 @@
 </template>
 <script>
 export default {
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       details: [
         {
-          title: "12",
-          subTitle: "Files",
+          title: "조회수",
+          subTitle: "방문수",
         },
         {
-          title: "2GB",
-          subTitle: "Used",
+          title: "찜한 장소",
+          subTitle: "5",
         },
         {
-          title: "24,6$",
-          subTitle: "Spent",
+          title: "메시지 수",
+          subTitle: "10",
         },
       ],
     };
+  },
+  watch: {
+    user: {
+      immediate: true,
+      handler(newUser) {
+        if (newUser) {
+          this.localUser = { ...newUser }; // ✨ props 복제
+        }
+      },
+    },
   },
   methods: {
     getClasses(index) {
@@ -77,4 +90,11 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+.avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+</style>

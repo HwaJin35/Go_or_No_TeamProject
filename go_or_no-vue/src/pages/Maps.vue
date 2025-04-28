@@ -32,7 +32,7 @@ import { getAllPlaces } from "./Map/place/getAllPlaces";
 import { registerPlace } from "./Map/place/registerPlace";
 import { renderMarkers } from "./Map/marker/renderMarkers";
 import { createClickMarker } from "./Map/marker/createClickMarker";
-
+import { isLoggedIn } from "../utils/loginState";
 export default {
   name: "Maps",
   data() {
@@ -60,6 +60,10 @@ export default {
     selectedLng() {
       return this.selectedLatLng?.getLng() ?? "";
     },
+    // ref를 computed로 감싸서 사용
+    isUserLoggedIn() {
+      return isLoggedIn.value;
+    }
   },
   mounted() {
     // Vue 컴포넌트가 화면에 완전히 그려졌을 때 실행(Vue의 라이프사이클 훅)
@@ -121,6 +125,11 @@ export default {
   methods: {
     // 장소 등록용 오버레이 표시
     showRegisterOverlay() {
+      if(!this.isUserLoggedIn) {
+        alert('로그인이 필요한 서비스입니다.');
+        return;
+      }
+
       this.registerOverlay.show(
         this.map,
         this.selectedLatLng,

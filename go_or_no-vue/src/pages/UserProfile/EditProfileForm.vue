@@ -6,93 +6,31 @@
           <div class="col-md-5">
             <fg-input
               type="text"
-              label="Company"
-              :disabled="true"
-              placeholder="Paper dashboard"
-              v-model="user.company"
-            >
-            </fg-input>
-          </div>
-          <div class="col-md-3">
-            <fg-input
-              type="text"
               label="Username"
               placeholder="Username"
-              v-model="user.username"
-            >
-            </fg-input>
+              v-model="localUser.username"
+            />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-7">
             <fg-input
               type="email"
-              label="Username"
+              label="Email"
               placeholder="Email"
-              v-model="user.email"
-            >
-            </fg-input>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <fg-input
-              type="text"
-              label="First Name"
-              placeholder="First Name"
-              v-model="user.firstName"
-            >
-            </fg-input>
-          </div>
-          <div class="col-md-6">
-            <fg-input
-              type="text"
-              label="Last Name"
-              placeholder="Last Name"
-              v-model="user.lastName"
-            >
-            </fg-input>
+              v-model="localUser.email"
+              :disabled="true"
+            />
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-12">
-            <fg-input
-              type="text"
-              label="Address"
-              placeholder="Home Address"
-              v-model="user.address"
-            >
-            </fg-input>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4">
-            <fg-input
-              type="text"
-              label="City"
-              placeholder="City"
-              v-model="user.city"
-            >
-            </fg-input>
-          </div>
-          <div class="col-md-4">
-            <fg-input
-              type="text"
-              label="Country"
-              placeholder="Country"
-              v-model="user.country"
-            >
-            </fg-input>
-          </div>
-          <div class="col-md-4">
-            <fg-input
-              type="number"
-              label="Postal Code"
-              placeholder="ZIP Code"
-              v-model="user.postalCode"
-            >
-            </fg-input>
+            <div class="form-group">
+              <label>프로필 사진 변경</label>
+              <input type="file" @change="handleFileChange" accept="image/*" />
+              <div v-if="previewImage" class="preview-container">
+                <img :src="previewImage" alt="미리보기" class="preview-image" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -100,48 +38,134 @@
           <div class="col-md-12">
             <div class="form-group">
               <label>About Me</label>
-              <textarea
-                rows="5"
-                class="form-control border-input"
-                placeholder="Here can be your description"
-                v-model="user.aboutMe"
-              >
-              </textarea>
+              <quill-editor
+                v-model="localUser.aboutMe"
+                :options="editorOptions"
+              />
             </div>
           </div>
         </div>
+
         <div class="text-center">
           <p-button type="info" round @click.native.prevent="updateProfile">
             Update Profile
           </p-button>
         </div>
-        <div class="clearfix"></div>
       </form>
     </div>
   </card>
 </template>
+
 <script>
+import axiosInstance from "@/utils/axiosInstance";
+import { quillEditor } from "vue-quill-editor";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import Quill from "quill";
+
 export default {
+  components: { quillEditor },
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      user: {
-        company: "Paper Dashboard",
-        username: "michael23",
+      localUser: {
+        username: "",
         email: "",
-        firstName: "Chet",
-        lastName: "Faker",
-        address: "Melbourne, Australia",
-        city: "Melbourne",
-        postalCode: "",
-        aboutMe: `We must accept finite disappointment, but hold on to infinite hope.`,
+        aboutMe: "",
+      },
+      profileImageFile: null,
+      previewImage: null,
+      editorOptions: {
+        placeholder: "300자 이내로 소개글을 입력하세요!",
+        theme: "snow",
       },
     };
   },
+  watch: {
+    user: {
+      immediate: true,
+      handler(newInfo) {
+        this.localUser.username = newInfo.nickname;
+        this.localUser.email = newInfo.email;
+        this.localUser.aboutMe = newInfo.aboutMe || "";
+      },
+    },
+    "localUser.aboutMe"(newVal) {
+      // Quill은 HTML 태그 포함되어 길이가 늘어남. 실제 텍스트만 추출해서 검사
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = newVal || "";
+      const plainText = tempDiv.innerText || tempDiv.textContent || "";
+
+      if (plainText.length > 300) {
+        this.$toasted.show("소개글은 300자까지만 작성할 수 있습니다.", {
+          type: "error",
+          duration: 1000, // 3초 뒤 자동 사라짐
+          position: "top-center", // 위치 설정 가능 (top-right, bottom-right 등)
+        });
+        // 3000자까지만 자른 다음 다시 HTML 변환
+        const truncatedText = plainText.slice(0, 300);
+        this.localUser.aboutMe = `<p>${truncatedText}</p>`;
+      }
+    },
+  },
   methods: {
-    updateProfile() {
-      alert("Your data: " + JSON.stringify(this.user));
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      this.profileImageFile = file;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewImage = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    async updateProfile() {
+      try {
+        const formData = new FormData();
+        formData.append("nickname", this.localUser.username);
+        formData.append("aboutMe", this.localUser.aboutMe); // 추가
+
+        if (this.profileImageFile) {
+          formData.append("files", this.profileImageFile);
+        }
+
+        await axiosInstance.put(`/api/users/${this.user.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        alert("프로필이 성공적으로 수정되었습니다.");
+        this.$emit("profile-updated");
+
+        this.profileImageFile = null;
+        this.previewImage = null;
+
+        const fileInput = this.$el.querySelector('input[type="file"]');
+        if (fileInput) fileInput.value = "";
+      } catch (error) {
+        console.error("프로필 수정 실패", error);
+        alert("프로필 수정에 실패했습니다.");
+      }
     },
   },
 };
 </script>
-<style></style>
+
+<style scoped>
+.preview-container {
+  margin-top: 10px;
+  text-align: center;
+}
+.preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+</style>
