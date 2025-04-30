@@ -17,6 +17,16 @@
       <!-- Navbar 우측 메뉴 -->
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
+          <!-- 세션 타이머 -->
+          <li v-if="isLoggedIn" class="nav-item session-timer-item">
+            <a href="#" class="nav-link disabled">
+              <i class="ti-timer"></i>
+              <p> 세션 종료까지 {{ remainingTimeFormatted }}</p>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" :style="{ width: remainingTimePercent + '%' }"></div>
+              </div>
+            </a>
+          </li>
           <!-- Stats -->
           <li class="nav-item">
             <router-link to="/stats" class="nav-link">
@@ -76,7 +86,8 @@
   </nav>
 </template>
 <script>
-import { isLoggedIn } from '../../utils/loginState';
+import { isLoggedIn, remainingTime, remainingTimeFormatted, remainingTimePercent, removeToken } from '@/utils/loginState';
+import { watch } from 'vue';
 
 export default {
   computed: {
@@ -87,6 +98,20 @@ export default {
     isLoggedIn() {
       return isLoggedIn.value; // 항상 최신 로그인 상태
     },
+    remainingTimeFormatted() {
+      return remainingTimeFormatted.value; // 남은 시간 가져오기
+    },
+    remainingTimePercent() {
+      return remainingTimePercent.value;
+    },
+  },
+  mounted() {
+    watch(remainingTime, (newTime) => {
+      if(newTime === 0 ) {
+        alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        this.$router.push('/');
+      }
+    });
   },
   data() {
     return {
@@ -110,12 +135,36 @@ export default {
       this.$sidebar.displaySidebar(false);
     },
     logout() {
-      localStorage.removeItem('accessToken');
-      isLoggedIn.value = false; // 전역 상태 false로 변경
+      removeToken();
       alert('로그아웃되었습니다.');
       this.$router.push('/');
     },
   },
 };
 </script>
-<style></style>
+<style scoped>
+.session-timer {
+  margin: 5px 0;
+}
+
+.timer-text {
+  font-size: 14px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  margin-top: 8px;
+  background-color: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #4caf50; /* 초록색 */
+  transition: width 0.5s linear;
+}
+</style>
