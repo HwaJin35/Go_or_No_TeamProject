@@ -15,7 +15,7 @@ import Community from "@/pages/Community.vue";
 import Favorites from "@/pages/Favorites.vue";
 import Message from "@/pages/Message.vue";
 import Popularity from "@/pages/Popularity.vue";
-import Signup from "@/pages/Signup.vue";
+import Signup from "@/pages/Signup/Signup.vue";
 import Login from "@/pages/Login.vue";
 
 

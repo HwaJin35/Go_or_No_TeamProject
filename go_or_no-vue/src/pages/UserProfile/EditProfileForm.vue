@@ -6,9 +6,9 @@
           <div class="col-md-5">
             <fg-input
               type="text"
-              label="Username"
-              placeholder="Username"
-              v-model="localUser.username"
+              label="Nickname"
+              placeholder="Nickname"
+              v-model="localUser.nickname"
             />
           </div>
           <div class="col-md-7">
@@ -62,7 +62,6 @@ import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import Quill from "quill";
 
 export default {
   components: { quillEditor },
@@ -75,7 +74,7 @@ export default {
   data() {
     return {
       localUser: {
-        username: "",
+        nickname: "",
         email: "",
         aboutMe: "",
       },
