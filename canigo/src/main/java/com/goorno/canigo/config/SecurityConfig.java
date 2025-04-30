@@ -45,8 +45,10 @@ public class SecurityConfig {
                 .requestMatchers(GET, "/api/places").permitAll()
                 .requestMatchers(POST, "/api/places").authenticated()
             	.requestMatchers(
+            			"/api/auth/**",
+            			"/api/users/check-email",
                 		"/api/users/signup",
-                		"/api/login",				// 로그인, 회원가입은 인증없이 허용
+                		"/api/login",				// 로그인, 회원가입, 인증, 이메일 중복은 인증없이 허용
                 		"/v3/api-docs/**",		// swagger URL은 인증없이 허용
                 		"/swagger-ui/**",
                 		"/swagger-ui.html",

@@ -29,6 +29,7 @@ public class UserResponseDTO {
 	private String profileImageFile;		// Base64로 인코딩된 프로필 이미지
 	private AuthProviderType authProvider;
 	private Status status;
+	private boolean isVerified;
 	private LocalDateTime banStartDate;
 	private LocalDateTime banEndDate;
 	private Integer banDurationDays;

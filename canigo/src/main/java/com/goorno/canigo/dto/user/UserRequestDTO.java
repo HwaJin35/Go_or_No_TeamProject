@@ -3,6 +3,7 @@ package com.goorno.canigo.dto.user;
 import com.goorno.canigo.common.dto.CommonMultipartDTO;
 import com.goorno.canigo.entity.enums.AuthProviderType;
 import com.goorno.canigo.entity.enums.Role;
+import com.goorno.canigo.entity.enums.Status;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,7 +35,7 @@ public class UserRequestDTO extends CommonMultipartDTO {
 	private String nickname;
 	
 	private AuthProviderType authProvider;
-	
 	private Role role;
-
+	private Status status;
+	
 }

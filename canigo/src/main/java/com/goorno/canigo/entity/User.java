@@ -68,7 +68,13 @@ public class User extends BaseEntity {
 	// 인증여부
 	// 로그인 방식이 LOCAL 이면 이메일 인증, KAKAO면 카카오 인증을 받은 후 true
 	@Column(nullable = false)
-	private boolean isVerified = false;
+	private boolean isVerified=false;
+	
+	// 인증토큰
+	private String authToken;
+	
+	// 인증토큰 만료시간
+	private LocalDateTime authTokenExpiresAt;
 	
 	// 등급
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,

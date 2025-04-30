@@ -11,6 +11,7 @@ import com.goorno.canigo.dto.user.UserResponseDTO;
 import com.goorno.canigo.dto.user.UserUpdateRequestDTO;
 import com.goorno.canigo.entity.User;
 import com.goorno.canigo.entity.enums.Role;
+import com.goorno.canigo.entity.enums.Status;
 
 /**
  * UserRequestDTO <-> User Entity 변환을 담당하는 매퍼 클래스 - Service 계층에서 호출하여 사용
@@ -46,8 +47,8 @@ public class UserMapper {
 				.id(user.getId())
 				.email(user.getEmail())
 				.nickname(user.getNickname())
-				.profileImageFile(user.getProfileImageBase64()).
-				authProvider(user.getAuthProvider())
+				.profileImageFile(user.getProfileImageBase64())
+				.authProvider(user.getAuthProvider())
 				.role(user.getRole())
 				.status(user.getStatus())
 				.banStartDate(user.getBanStartDate())
@@ -60,7 +61,9 @@ public class UserMapper {
 	// 회원 정보 수정 시 User Entity에 요청 DTO 적용 - 닉네임, 프로필 이미지, 소개글만 수정
 	public void updateUserFromDTO(User user, UserUpdateRequestDTO dto) {
 		user.setNickname(dto.getNickname());
-		user.setAboutMe(dto.getAboutMe());
+		if (dto.getAboutMe() != null) {
+			user.setAboutMe(dto.getAboutMe());
+		}
 		// 새로운 프로필 이미지가 있을 경우만 업데이트
 		if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
 			MultipartFile file = dto.getFiles().get(0);
@@ -70,9 +73,6 @@ public class UserMapper {
 			} catch (IOException e) {
 				throw new RuntimeException("프로필 이미지 수정 실패", e);
 			}
-		}
-		if (dto.getAboutMe() != null) {
-			user.setAboutMe(dto.getAboutMe());
 		}
 	}
 }

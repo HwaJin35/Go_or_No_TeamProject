@@ -35,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // 토큰에서 정보 추출
                 Claims claims = jwtUtil.parseClaims(token);
                 String email = claims.getSubject();
-                String role = claims.get("roles", String.class);
                 
                 var userDetails = userDetailsService.loadUserByUsername(email);
 

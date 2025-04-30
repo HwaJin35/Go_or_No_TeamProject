@@ -11,6 +11,9 @@ public interface UserService {
 	// 회원가입
 	UserResponseDTO createUser(UserRequestDTO userRequestDTO);
 	
+	// 이메일 중복 확인
+	boolean checkEmailDuplicate(String email);
+	
 	// 전체 회원 조회
 	List<UserResponseDTO> getAllUsers();
 	

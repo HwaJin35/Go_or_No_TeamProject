@@ -1,6 +1,8 @@
 package com.goorno.canigo.controller.user;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,8 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.goorno.canigo.dto.user.UserRequestDTO;
 import com.goorno.canigo.dto.user.UserResponseDTO;
@@ -37,6 +39,16 @@ public class UserController {
         UserResponseDTO createdUser = userService.createUser(requestDTO);
         return ResponseEntity.ok(createdUser);
     }
+	
+	// 이메일 중복 확인 API
+	@GetMapping("/check-email")
+	public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(@RequestParam("email") String email) {
+		boolean exists = userService.checkEmailDuplicate(email);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("exists", exists);
+		return ResponseEntity.ok(response);
+		// Json 응답 형태: { "exists" : true(false) }
+	}		
 
 	// 전체 회원 조회 API
 	@GetMapping
@@ -44,7 +56,7 @@ public class UserController {
 		List<UserResponseDTO> users = userService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
-	
+
 	// 이메일로 회원 조회 API
 	@GetMapping("/email/{email}")
 	public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable("email") String email) {
