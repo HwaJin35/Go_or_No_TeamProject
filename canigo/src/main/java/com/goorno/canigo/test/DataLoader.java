@@ -19,23 +19,28 @@ public class DataLoader implements CommandLineRunner {
 	@Transactional
 	@Override
 	public void run(String... args) throws Exception {
-		// 더미 데이터 생성
-        User user = User.builder()
-                .email("dummy@example.com")  // 이메일 (null 허용)
-                .password("password123")  // 비밀번호 (테스트용, 실제 시스템에서는 암호화 필요)
-                .nickname("dummyUser")  // 닉네임
-                .profileImageBase64("profile.jpg")  // 프로필 이미지 파일 (예시)
-                .authProvider(AuthProviderType.LOCAL)  // 로그인 방식 (LOCAL 또는 KAKAO)
-                .status(Status.ACTIVE)  // 사용자 상태 (ACTIVE, INACTIVE, BANNED 등)
-                .build();
+		String dummyEmail = "dummy@example.com";
+
+	    // 이미 존재하는지 체크
+	    boolean exists = userRepository.findByEmail(dummyEmail).isPresent();
+		
+	    if (!exists) {
+	        User user = User.builder()
+	            .email(dummyEmail)
+	            .password("password123")
+	            .nickname("dummyUser")
+	            .profileImageBase64("profile.jpg")
+	            .authProvider(AuthProviderType.LOCAL)
+	            .status(Status.ACTIVE)
+	            .build();
+	        
+	        userRepository.save(user);
+	        System.out.println("Dummy user 저장 완료!");
         
-        // 더미 데이터 저장
-        userRepository.save(user);
-        
-        // DB에서 저장된 사용자 조회 및 출력
-        System.out.println("DB에서 가져온 데이터: " + userRepository.findAll());
-    }
-	
+	    } else {
+	        System.out.println("Dummy user 이미 존재함. 저장 생략");
+	    }
+	}
 	public User getDummyUser() {
 		return userRepository.findByEmail("dummy@example.com")
 				.orElseThrow(() -> new RuntimeException("User not found"));

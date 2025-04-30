@@ -43,6 +43,7 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션을 사용하지 않음 (JWT 기반)
             .authorizeHttpRequests() // 요청 경로에 따라 인증 여부 설정
                 .requestMatchers(GET, "/api/places").permitAll()
+                .requestMatchers(GET, "/api/places/categories").permitAll()
                 .requestMatchers(POST, "/api/places").authenticated()
             	.requestMatchers(
             			"/api/auth/**",

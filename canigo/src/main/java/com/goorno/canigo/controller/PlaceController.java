@@ -1,6 +1,7 @@
 package com.goorno.canigo.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.goorno.canigo.dto.place.PlaceRequestDTO;
 import com.goorno.canigo.dto.place.PlaceResponseDTO;
 import com.goorno.canigo.entity.User;
+import com.goorno.canigo.entity.enums.CategoryType;
 import com.goorno.canigo.service.PlaceService;
 import com.goorno.canigo.test.DataLoader;
 
@@ -65,5 +67,13 @@ public class PlaceController {
 	public ResponseEntity<PlaceResponseDTO> getPlace(@PathVariable("id") Long id) {
 		PlaceResponseDTO placeResponseDTO = placeService.getPlace(id);
 		return ResponseEntity.ok(placeResponseDTO);
+	}
+	
+	// 장소에 대한 카테고리 목록 제공하기
+	@GetMapping("/categories")
+	public List<String> getCategories() {
+		return Arrays.stream(CategoryType.values())
+				.map(CategoryType::getDescription)
+				.collect(Collectors.toList());
 	}
 }

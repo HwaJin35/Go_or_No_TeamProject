@@ -6,12 +6,18 @@
     <div class="map" ref="mapContainer">
       <!-- 현재 위치로 이동 버튼 -->
       <button class="btn-current-location" @click="goToCurrentLocation">
-      📍 현재 위치로 이동
+        📍 현재 위치로 이동
       </button>
       <!-- 현재 선택된 위/경도 표시 -->
       <div id="clickLatlng">
-      <!-- computed에서 계산된 값을 변수명으로 사용  -->
+        <!-- computed에서 계산된 값을 변수명으로 사용  -->
         클릭한 위치의 위도는 {{ selectedLat }} 이고, 경도는 {{ selectedLng }} 입니다.
+      </div>
+      <div id="regPop">
+        <RegisterPlacePopup
+          ref="registerPlacePopup"
+          @place-registered="fetchAllPlaces"
+        />
       </div>
     </div>
   </div>
@@ -29,12 +35,17 @@ import { createMap, setCurrentLocation } from "./Map/utils/map";
 import { createUserMarker } from "./Map/marker/createUserMarker";
 import { overlayController } from "./Map/overlay/overlayController";
 import { getAllPlaces } from "./Map/place/getAllPlaces";
-import { registerPlace } from "./Map/place/registerPlace";
+// import { registerPlace } from "./Map/place/registerPlace";
 import { renderMarkers } from "./Map/marker/renderMarkers";
 import { createClickMarker } from "./Map/marker/createClickMarker";
 import { isLoggedIn } from "../utils/loginState";
+import RegisterPlacePopup from "./Map/place/RegisterPlacePopup.vue";
+
 export default {
   name: "Maps",
+  components: {
+    RegisterPlacePopup
+  },
   data() {
     // 이 컴포넌트가 내부적으로 갖고 있는 상태(state) 정의.
     return {
@@ -147,19 +158,22 @@ export default {
         return;
       }
 
-      try {
-        const success = await registerPlace(
-          this.selectedLatLng.getLat(),
-          this.selectedLatLng.getLng()
-        );
+      // RegisterPlacePopup을 띄움(이때, 현재 좌표를 넘겨줌)
+      this.$refs.registerPlacePopup.showPopup(this.selectedLatLng);
 
-        if (success) {
-          alert("장소 등록 완료!");
-          this.fetchAllPlaces();
-        }
-      } catch (error) {
-        alert("등록에 실패했습니다.");
-      }
+      // try {
+      //   const success = await registerPlace(
+      //     this.selectedLatLng.getLat(),
+      //     this.selectedLatLng.getLng()
+      //   );
+
+      //   if (success) {
+      //     alert("장소 등록 완료!");
+      //     this.fetchAllPlaces();
+      //   }
+      // } catch (error) {
+      //   alert("등록에 실패했습니다.");
+      // }
     },
 
     // 장소 목록 API 호출
@@ -232,11 +246,13 @@ export default {
   height: 83vh;
   position: relative;
 }
+
 .map {
   width: 100%;
   height: 100%;
   position: relative;
 }
+
 .btn-current-location {
   position: absolute;
   bottom: 75px;
@@ -250,9 +266,11 @@ export default {
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+
 .btn-current-location:hover {
   background-color: #f2f2f2;
 }
+
 #clickLatlng {
   position: absolute;
   bottom: 20px;
@@ -262,5 +280,10 @@ export default {
   border-radius: 5px;
   font-size: 14px;
   z-index: 10;
+}
+
+#regPop {
+  position: absolute;
+  z-index: 11;
 }
 </style>

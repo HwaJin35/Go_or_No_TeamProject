@@ -3,6 +3,8 @@ package com.goorno.canigo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class Hashtag {
 	private Long id;
 	
 	// ex) "#음식", "#음료" 등
+	@Column(unique = true)
 	private String name;
 	
 	// 해시태그가 달린 장소
