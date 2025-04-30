@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class EmailAuthService {
 	private final JavaMailSender mailSender;
 	private final UserRepository userRepository;
 	private final TemplateEngine templateEngine;	// 타임리프 템플릿 엔진
+	
+	@Value("${spring.mail.username}")
+	private String mailUsername;	// SMTP 설정 발신자 메일 주소
 	
 	// 인증 코드 전송 메서드
 	// 아직 가입되지 않은 사용자에게만 허용
@@ -86,6 +90,7 @@ public class EmailAuthService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(email);
+            helper.setFrom(mailUsername);
             helper.setSubject("[여기 가도 될까?] 이메일 인증 코드 안내메일입니다.");
             helper.setText(htmlContent, true); // true = HTML 형식
 
