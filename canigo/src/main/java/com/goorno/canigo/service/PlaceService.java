@@ -10,6 +10,7 @@ import com.goorno.canigo.dto.place.PlaceRequestDTO;
 import com.goorno.canigo.dto.place.PlaceResponseDTO;
 import com.goorno.canigo.entity.Place;
 import com.goorno.canigo.entity.User;
+import com.goorno.canigo.entity.enums.CategoryType;
 import com.goorno.canigo.repository.PlaceRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +33,7 @@ public class PlaceService {
 		place.setDescription(placeRequestDTO.getDescription());
 		place.setLatitude(placeRequestDTO.getLatitude());
 		place.setLongitude(placeRequestDTO.getLongitude());
+		place.setCategory(CategoryType.fromDescription(placeRequestDTO.getCategoryName()));
 		place.setUser(user); // 등록한 유저
 		place.setUploadFiles(base64Files);
 		

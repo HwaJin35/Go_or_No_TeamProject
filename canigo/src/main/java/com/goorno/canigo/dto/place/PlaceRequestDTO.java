@@ -1,6 +1,7 @@
 package com.goorno.canigo.dto.place;
 
 import com.goorno.canigo.common.dto.CommonMultipartDTO;
+import com.goorno.canigo.entity.enums.CategoryType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ public class PlaceRequestDTO extends CommonMultipartDTO {
 	private String description; // 장소 설명
 	private Double latitude; // 위도
 	private Double longitude; // 경도
+	private CategoryType category; // 카테고리
 }
 
 // 장소 등록에 필요한 정보를 담는 DTO

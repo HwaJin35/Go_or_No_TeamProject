@@ -3,6 +3,7 @@ package com.goorno.canigo.dto.place;
 import java.util.stream.Collectors;
 
 import com.goorno.canigo.entity.Place;
+import com.goorno.canigo.entity.enums.CategoryType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class PlaceResponseDTO {
 	private Double latitude;
 	private Double longitude;
 	private String createdBy; // 유저 닉네임
+	private CategoryType category;
 	private String uploadFiles; // DB에서 꺼낸 Base64 이미지
 
 	public static PlaceResponseDTO fromEntity(Place place) {

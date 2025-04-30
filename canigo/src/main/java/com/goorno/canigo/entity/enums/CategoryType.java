@@ -9,15 +9,25 @@ public enum CategoryType {
 	NATURE("자연공간"),
 	ETC("기타");
 
-	private final String description;
+	private final String categoryName;
 	
-	CategoryType(String description) {
-		this.description = description;
+	CategoryType(String categoryName) {
+		this.categoryName = categoryName;
 	}
 	
 	// 카테고리의 설명을 반환
-	public String getDescription() {
-		return description;
+	public String getCategoryName() {
+		return categoryName;
+	}
+	
+	// 한글을 enum 상수로 변환하는 커스텀 메서드 
+	public static CategoryType fromDescription(String categoryName) {
+		for (CategoryType category : CategoryType.values()) {
+			if (category.getCategoryName().equals(categoryName)) {
+				return category;
+			}
+		}
+		throw new IllegalArgumentException("Unknown categoryName: " + categoryName);
 	}
 	
 }

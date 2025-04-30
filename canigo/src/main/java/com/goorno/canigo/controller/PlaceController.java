@@ -73,7 +73,7 @@ public class PlaceController {
 	@GetMapping("/categories")
 	public List<String> getCategories() {
 		return Arrays.stream(CategoryType.values())
-				.map(CategoryType::getDescription)
+				.map(CategoryType::getCategoryName)
 				.collect(Collectors.toList());
 	}
 }
