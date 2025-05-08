@@ -118,6 +118,8 @@ export default {
 
         // 폼 제출 시 데이터 서버로 전송
         async handleSubmit() {
+            // console.log("선택된 카테고리:", this.form.category);
+
             try {
                 // 모든 파일을 base64로 변환 완료 후 서버로 전송
                 const files = await Promise.all(this.form.uploadFiles); // 모든 Promise를 기다림

@@ -23,7 +23,7 @@ export async function registerPlace(name, description, category, hashtags, uploa
   const formData = new FormData();
   formData.append("name", name);
   formData.append("description", description);
-  formData.append("category", category);
+  formData.append("categoryName", category);
   formData.append("hashtags", hashtags);
   formData.append("latitude", lat);
   formData.append("longitude", lng);
