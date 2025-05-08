@@ -96,6 +96,7 @@ export default {
             .get("http://localhost:8090/api/places/categories")
             .then((response) => {
                 this.categories = response.data;
+                console.log(response);
             })
             .catch((error) => {
                 console.error("카테고리 목록 불러오기 실패", error);
@@ -136,7 +137,7 @@ export default {
 
                 if (success) {
                     alert("장소 등록 완료!");
-                    this.$emit("place-registered");
+                    this.$emit("place-registered"); // 부모 쪽으로 이벤트 전달
                     this.closePopup(); // 성공 후 팝업 닫기
                 }
             } catch (error) {
