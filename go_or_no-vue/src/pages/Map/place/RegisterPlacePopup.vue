@@ -106,15 +106,18 @@ export default {
         // 이미지 파일 업로드 처리(base64로 변환)
         handleFileUpload(event) {
             const files = event.target.files;
-            this.form.uploadFiles = Array.from(files).map((file) => {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file); // base64로 변환
-                    reader.onload = () => {
-                        resolve(reader.result); // base64로 변환된 파일 반환
-                    };
-                });
-            });
+            this.form.uploadFiles = Array.from(files);
+
+            // @@@@@ base64로 처리하면 서버에서 못 받아냄!
+            // this.form.uploadFiles = Array.from(files).map((file) => {
+            //     return new Promise((resolve) => {
+            //         const reader = new FileReader();
+            //         reader.readAsDataURL(file); // base64로 변환
+            //         reader.onload = () => {
+            //             resolve(reader.result); // base64로 변환된 파일 반환
+            //         };
+            //     });
+            // });
         },
 
         // 폼 제출 시 데이터 서버로 전송

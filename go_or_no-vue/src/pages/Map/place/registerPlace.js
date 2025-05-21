@@ -28,9 +28,10 @@ export async function registerPlace(name, description, category, hashtags, uploa
   formData.append("latitude", lat);
   formData.append("longitude", lng);
 
-  // base64로 변환된 이미지들을 FormData에 추가
+  // ** @@@ 받아내는 Server의 필드명과 일치해야 함!
+  // 이미지들을 FormData에 추가
   uploadFiles.forEach((uploadFiles, idx) => {
-    // base64 이미지를 "uploadFiles" 필드로 추가
+    // 이미지를 "uploadFiles" 필드로 추가
     formData.append("uploadFiles", uploadFiles);
   });
 
