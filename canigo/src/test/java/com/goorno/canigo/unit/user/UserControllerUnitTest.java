@@ -90,7 +90,7 @@ public class UserControllerUnitTest {
 				.nickname("tester")
 				.authProvider(AuthProviderType.LOCAL)
 				.build();
-		requestDTO.setFiles(List.of(mockFile));
+		requestDTO.setUploadFiles(List.of(mockFile));
 		
 		// 테스트에 사용할 응답용 DTO 초기화
 		responseDTO = UserResponseDTO.builder()
@@ -112,7 +112,7 @@ public class UserControllerUnitTest {
 		
 		// when & then :  POST /api/users/signup 요청을 보내고, 응답이 200 OK이며, nickname이 "tester"인지 확인
 		mockMvc.perform(multipart("/api/users/signup")
-				.file((MockMultipartFile) requestDTO.getFiles().get(0))
+				.file((MockMultipartFile) requestDTO.getUploadFiles().get(0))
 				.param("email",  requestDTO.getEmail())
 				.param("password",  requestDTO.getPassword())
 				.param("nickname", requestDTO.getNickname())

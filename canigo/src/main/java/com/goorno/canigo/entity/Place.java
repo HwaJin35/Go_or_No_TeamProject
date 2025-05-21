@@ -23,6 +23,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -69,6 +70,7 @@ public class Place extends BaseEntity {
 		joinColumns = @JoinColumn(name = "place_id")
 	)
 	@Column(name = "upload_file")
+	@Lob
 	private List<String> uploadFiles;
 	
 	// 장소 카테고리

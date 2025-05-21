@@ -43,7 +43,7 @@ public class PlaceServiceUnitTest {
 		placeRequestDTO.setDescription("테스트 설명");
 		placeRequestDTO.setLatitude(36.1234);
 		placeRequestDTO.setLongitude(127.5678);
-		placeRequestDTO.setFiles(List.of(mock(MultipartFile.class)));
+		placeRequestDTO.setUploadFiles(List.of(mock(MultipartFile.class)));
 		
 		User user = new User();
 		user.setId(1L);

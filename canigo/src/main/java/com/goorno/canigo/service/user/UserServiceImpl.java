@@ -63,8 +63,8 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		// 프로필 이미지 파일 검증
-		if (userRequestDTO.getFiles() != null && !userRequestDTO.getFiles().isEmpty()) {
-			FileValidationUtil.validateFiles(userRequestDTO.getFiles());
+		if (userRequestDTO.getUploadFiles() != null && !userRequestDTO.getUploadFiles().isEmpty()) {
+			FileValidationUtil.validateFiles(userRequestDTO.getUploadFiles());
 		}
 		 
 		// 비밀번호 암호화 후 설정
@@ -77,8 +77,8 @@ public class UserServiceImpl implements UserService {
 		user.setRole(Role.ROLE_USER);
 		user.setStatus(Status.ACTIVE);
 		
-		 if (userRequestDTO.getFiles() != null && !userRequestDTO.getFiles().isEmpty()) {
-		        MultipartFile file = userRequestDTO.getFiles().get(0);
+		 if (userRequestDTO.getUploadFiles() != null && !userRequestDTO.getUploadFiles().isEmpty()) {
+		        MultipartFile file = userRequestDTO.getUploadFiles().get(0);
 		        try {
 		            String base64 = Base64Util.encodeFileToBase64(file);
 		            user.setProfileImageBase64(base64);

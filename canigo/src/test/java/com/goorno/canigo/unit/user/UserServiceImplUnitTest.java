@@ -90,7 +90,7 @@ public class UserServiceImplUnitTest {
 				.authProvider(AuthProviderType.LOCAL)
 				.role(Role.ROLE_USER)
 				.build();
-		requestDTO.setFiles(List.of(mockFile));
+		requestDTO.setUploadFiles(List.of(mockFile));
 		
 		// 응답용 DTO
 		responseDTO = UserResponseDTO.builder()
@@ -189,7 +189,7 @@ public class UserServiceImplUnitTest {
         UserUpdateRequestDTO updatedRequestDTO = UserUpdateRequestDTO.builder()
                 .nickname("updatedNickname")
                 .build();
-        updatedRequestDTO.setFiles(List.of(mockFile));
+        updatedRequestDTO.setUploadFiles(List.of(mockFile));
 
         // 수정 전 기존에 저장된 유저를 가정
         User existingUser = User.builder()

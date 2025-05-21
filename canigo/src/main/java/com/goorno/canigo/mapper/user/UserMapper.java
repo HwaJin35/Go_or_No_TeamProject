@@ -29,8 +29,8 @@ public class UserMapper {
 		user.setRole(Role.ROLE_USER);
 
 		// 파일이 있을 경우 첫 번째 파일을 프로필 이미지로 설정
-		if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-			MultipartFile file = dto.getFiles().get(0); // 단일 파일처리
+		if (dto.getUploadFiles() != null && !dto.getUploadFiles().isEmpty()) {
+			MultipartFile file = dto.getUploadFiles().get(0); // 단일 파일처리
 			try {
 				String base64 = Base64Util.encodeFileToBase64(file);
 				user.setProfileImageBase64(base64);
@@ -65,8 +65,8 @@ public class UserMapper {
 			user.setAboutMe(dto.getAboutMe());
 		}
 		// 새로운 프로필 이미지가 있을 경우만 업데이트
-		if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-			MultipartFile file = dto.getFiles().get(0);
+		if (dto.getUploadFiles() != null && !dto.getUploadFiles().isEmpty()) {
+			MultipartFile file = dto.getUploadFiles().get(0);
 			try {
 				String base64 = Base64Util.encodeFileToBase64(file);
 				user.setProfileImageBase64(base64);

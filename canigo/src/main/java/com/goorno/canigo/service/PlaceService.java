@@ -25,7 +25,7 @@ public class PlaceService {
 	// 장소 등록 메서드
 	public PlaceResponseDTO createPlace(PlaceRequestDTO placeRequestDTO, User user) throws IOException {
 		// 업로드된 파일을 Base64로 변환
-		List<String> base64Files = Base64Util.encodeFilesToBase64(placeRequestDTO.getFiles());
+		List<String> base64Files = Base64Util.encodeFilesToBase64(placeRequestDTO.getUploadFiles());
 		
 		// Place 엔티티 생성
 		Place place = new Place();

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class CommonMultipartDTO {
-	private List<MultipartFile> files;
+	private List<MultipartFile> uploadFiles;
 	// 업로드할 이미지 파일 담는 필드
 	// 스프링이 자동으로 처리 해준다.
 }
