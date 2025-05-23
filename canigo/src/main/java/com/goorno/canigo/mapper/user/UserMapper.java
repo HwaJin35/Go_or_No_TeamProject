@@ -26,7 +26,7 @@ public class UserMapper {
 		user.setPassword(dto.getPassword());
 		user.setNickname(dto.getNickname());
 		user.setAuthProvider(dto.getAuthProvider());
-		user.setRole(Role.ROLE_USER);
+		user.setRole(Role.USER);
 
 		// 파일이 있을 경우 첫 번째 파일을 프로필 이미지로 설정
 		if (dto.getUploadFiles() != null && !dto.getUploadFiles().isEmpty()) {

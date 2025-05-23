@@ -64,7 +64,7 @@ export default {
     async confirmDeleteAccount() {
       if( confirm("정말 탈퇴하시겠습니까?\n 탈퇴 시 작성한 데이터들이 모두 삭제되며, 복구할 수 없습니다.") ) {
         try {
-          await axiosInstance.delete(`/api/users/${Number(this.user.id)}`);
+          await axiosInstance.delete("/api/users/me");
           alert("회원 탈퇴가 완료되었습니다.");
           removeToken();  // 토큰 삭제
           isLoggedIn.value = false; // 로그인 상태 false로 변경

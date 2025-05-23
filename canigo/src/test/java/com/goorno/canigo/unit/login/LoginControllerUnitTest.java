@@ -65,7 +65,7 @@ public class LoginControllerUnitTest {
 	@Test
 	@DisplayName("로그인 성공 테스트")
 	void login_success() throws Exception {		
-		when(loginService.login(any())).thenReturn(new LoginResponseDTO("fake-jwt-token"));
+		when(loginService.login(any())).thenReturn(new LoginResponseDTO("fake-jwt-token", "fake-nickname","USER"));
 		
 		mockMvc.perform(post("/api/login")
 					.contentType(MediaType.APPLICATION_JSON)

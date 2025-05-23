@@ -8,7 +8,10 @@
       <div>
         <input v-model="password" type="password" placeholder="비밀번호 입력" required />
       </div>
-      <button type="submit">로그인</button>
+      <div class="login-btn-group">
+        <button class="half-btn login-btn" type="submit">로그인</button>
+        <button class="half-btn home-btn" @click="$router.push('/')">홈으로</button>
+      </div>
     </form>
   </div>
 </template>
@@ -38,7 +41,7 @@ export default {
         // 로그인 성공하면 isLoggedIn = true
         isLoggedIn.value = true;
         // 토큰 확인
-        console.log('accessToken: ',localStorage.getItem('accessToken'));
+        // console.log('accessToken: ',localStorage.getItem('accessToken'));
 
         // 로그인 성공 후 페이지 이동 (router 사용)
         this.$router.push('/') // 메인페이지로 이동
@@ -75,7 +78,39 @@ export default {
   box-sizing: border-box;
 }
 
-.login-container button {
+.login-btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.login-btn {
+  background-color: #4caf50;
+}
+
+.login-btn:hover {
+  background-color: #45a049;
+}
+
+.home-btn {
+  background-color: #1976d2;
+}
+
+.home-btn:hover {
+  background-color: #1565c0;
+}
+
+.half-btn {
+  width: 50%; 
+  padding: 10px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* .login-container button {
   width: 100%;
   padding: 10px;
   background-color: #4caf50;
@@ -87,5 +122,5 @@ export default {
 
 .login-container button:hover {
   background-color: #45a049;
-}
+} */
 </style>

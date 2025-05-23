@@ -3,11 +3,16 @@ package com.goorno.canigo.common.exception.advice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.goorno.canigo.common.exception.BusinessException;
+import com.goorno.canigo.common.exception.ErrorCode;
+import com.goorno.canigo.common.exception.UserException;
 import com.goorno.canigo.common.response.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +26,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handlerBusinessException(BusinessException ex, HttpServletRequest request) {
 		log.warn("BusinessException: {}", ex.getMessage());
+		return buildErrorResponse(HttpStatus.valueOf(ex.getStatusCode()), ex.getErrorMessage(), request.getRequestURI());
+	}
+	
+	// 커스텀 UserException 처리
+	@ExceptionHandler(UserException.class)
+	public ResponseEntity<ErrorResponse> handlerUserException(UserException ex, HttpServletRequest request) {
+		log.warn("UserException: {}", ex.getMessage());
 		return buildErrorResponse(HttpStatus.valueOf(ex.getStatusCode()), ex.getErrorMessage(), request.getRequestURI());
 	}
 
@@ -49,11 +61,22 @@ public class GlobalExceptionHandler {
 		return buildErrorResponse(HttpStatus.BAD_REQUEST, errorMessage, request.getRequestURI());
 	}
 	
-	// BadCredentialsException (비밀번호 틀림) 처리
-	@ExceptionHandler(BadCredentialsException.class)
-	public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
-		log.warn("BadCredentialsException: {}", ex.getMessage());
-		return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI());
+	// AuthenticationException ( 인증 실패 )
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
+		ErrorCode errorCode;
+		
+		if (ex instanceof UsernameNotFoundException) {	// 사용자 존재 여부 처리
+				errorCode = ErrorCode.AUTHENTICATION_USER_NOT_FOUND;
+		} else if (ex instanceof BadCredentialsException) {	// 비밀번호 틀림 처리
+			errorCode = ErrorCode.BAD_CREDENTIALS;
+		} else if (ex instanceof DisabledException) {	// 비활성화 예외 처리
+			errorCode = ErrorCode.ACCOUNT_DISABLED;
+		} else {
+			errorCode = ErrorCode.AUTHENTICATION_FAILED;
+		}
+		log.warn("AuthenticationException: {}", errorCode.getMessage());
+		return buildErrorResponse(HttpStatus.UNAUTHORIZED, errorCode.getMessage(), request.getRequestURI());
 	}
 	
 	// 그 외 Exception

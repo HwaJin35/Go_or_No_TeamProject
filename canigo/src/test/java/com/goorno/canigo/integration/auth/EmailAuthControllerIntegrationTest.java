@@ -57,7 +57,7 @@ class EmailAuthControllerIntegrationTest {
                 .nickname("tester")
                 .password("password123")
                 .authProvider(AuthProviderType.LOCAL)
-                .role(Role.ROLE_USER)
+                .role(Role.USER)
                 .status(Status.ACTIVE)
                 .isVerified(false)
                 .build());

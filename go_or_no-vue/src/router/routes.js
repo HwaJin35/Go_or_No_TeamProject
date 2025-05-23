@@ -17,6 +17,7 @@ import Message from "@/pages/Message.vue";
 import Popularity from "@/pages/Popularity.vue";
 import Signup from "@/pages/Signup/Signup.vue";
 import Login from "@/pages/Login.vue";
+import ChangePassword from "@/pages/UserProfile/ChangePassword.vue";
 
 
 const routes = [
@@ -95,6 +96,11 @@ const routes = [
         path: "login",
         name: "로그인",
         component: Login
+      },
+      {
+        path: "change-password",
+        name: "비밀번호 변경",
+        component: ChangePassword       
       },
     ],
   },

@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.goorno.canigo.dto.user.PasswordChangeDTO;
 import com.goorno.canigo.dto.user.UserRequestDTO;
 import com.goorno.canigo.dto.user.UserResponseDTO;
 import com.goorno.canigo.dto.user.UserUpdateRequestDTO;
@@ -48,8 +50,17 @@ public class UserController {
 		response.put("exists", exists);
 		return ResponseEntity.ok(response);
 		// Json 응답 형태: { "exists" : true(false) }
-	}		
-
+	}
+	
+	// 닉네임 중복 확인 API
+	@GetMapping("/check-nickname")
+	public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
+	    boolean exists = userService.checkNicknameDuplicate(nickname);
+	    Map<String, Boolean> response = new HashMap<>();
+	    response.put("exists", exists);
+	    return ResponseEntity.ok(response);
+	}
+	
 	// 전체 회원 조회 API
 	@GetMapping
 	public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
@@ -81,13 +92,23 @@ public class UserController {
     }
 	
 	// 회원 정보 수정 API
-	 @PutMapping("/{id}")
-	    public ResponseEntity<UserResponseDTO> updateUser(
-	            @PathVariable("id") Long id,
+	 @PutMapping("/me")
+	 public ResponseEntity<UserResponseDTO> updateUser(
+	            @AuthenticationPrincipal UserDetails userDetails,
 	            @Valid @ModelAttribute UserUpdateRequestDTO updateDTO) {
-	        UserResponseDTO updatedUser = userService.updateUser(id, updateDTO);
-	        return ResponseEntity.ok(updatedUser);
-	    }
+		 String email = userDetails.getUsername();
+		 Long id = userService.getUserByEmail(email).getId();
+	     UserResponseDTO updatedUser = userService.updateUser(id, updateDTO);
+	     return ResponseEntity.ok(updatedUser);
+	 }
+	 
+	 // 비밀번호 수정 API
+	 @PutMapping("/me/password")
+	 public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PasswordChangeDTO dto){
+		String email = userDetails.getUsername();   // 로그인한 사용자의 이메일 
+		userService.changePassword(email, dto.getCurrentPassword(), dto.getNewPassword(), dto.getConfirmPassword());
+		return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+	 }
 	
 	// 회원 비활성화 API
 	@PatchMapping("/{id}/deactivate")
@@ -97,8 +118,10 @@ public class UserController {
 	}
 	
 	// 회원 탈퇴 API
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+	@DeleteMapping("/me")
+	public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal UserDetails userDetails) {
+		String email = userDetails.getUsername();
+		Long id = userService.getUserByEmail(email).getId();
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
 	}

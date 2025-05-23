@@ -24,12 +24,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("해당 이메일을 찾을 수 없습니다."));
 		
+		// User의 role(ENUM)을 문자열로 변환
+		String role = user.getRole().name();
+		
 		// User 엔터티를 Spring Security가 이해할 수 있는 UserDetails 객체로 변환
 		return org.springframework.security.core.userdetails.User
 				.withUsername(user.getEmail())
 				.password(user.getPassword())
-				.roles("USER")
+				.roles(role)
 				.build();
 	}
-
 }

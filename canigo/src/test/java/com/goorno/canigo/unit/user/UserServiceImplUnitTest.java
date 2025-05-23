@@ -79,7 +79,7 @@ public class UserServiceImplUnitTest {
 				.password("testPassword")
 				.nickname("tester")
 				.authProvider(AuthProviderType.LOCAL)
-				.role(Role.ROLE_USER)
+				.role(Role.USER)
 				.build();
 		
 		// 회원가입 요청 DTO
@@ -88,7 +88,7 @@ public class UserServiceImplUnitTest {
 				.password("testPassword")
 				.nickname("tester")
 				.authProvider(AuthProviderType.LOCAL)
-				.role(Role.ROLE_USER)
+				.role(Role.USER)
 				.build();
 		requestDTO.setUploadFiles(List.of(mockFile));
 		
@@ -99,7 +99,7 @@ public class UserServiceImplUnitTest {
                 .nickname("tester")
                 .profileImageFile(profileImageBase64)
                 .authProvider(AuthProviderType.LOCAL)
-				.role(Role.ROLE_USER)
+				.role(Role.USER)
                 .status(Status.ACTIVE)
                 .build();
     }

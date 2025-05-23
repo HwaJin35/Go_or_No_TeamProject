@@ -10,6 +10,9 @@
               placeholder="Nickname"
               v-model="localUser.nickname"
             />
+            <small v-if="nicknameMessage" :style="{ color: nicknameExists ? 'red' : 'green' }">
+              {{ nicknameMessage }}
+            </small>
           </div>
           <div class="col-md-7">
             <fg-input
@@ -22,6 +25,14 @@
           </div>
         </div>
 
+        <!-- 비밀번호 변경 페이지로 리다이렉트 -->
+        <div class="text-center mt-3">
+          <p-button type="default" round @click.native="goToPasswordChange">
+            비밀번호 변경하기
+          </p-button>
+        </div>
+
+        <!-- 프로필 사진 변경 -->
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
@@ -62,6 +73,7 @@ import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import { debounce } from "@/utils/debounce";
 
 export default {
   components: { quillEditor },
@@ -84,13 +96,15 @@ export default {
         placeholder: "300자 이내로 소개글을 입력하세요!",
         theme: "snow",
       },
+      nicknameMessage: "",
+      nicknameExists: false,
     };
   },
   watch: {
     user: {
       immediate: true,
       handler(newInfo) {
-        this.localUser.username = newInfo.nickname;
+        this.localUser.nickname = newInfo.nickname;
         this.localUser.email = newInfo.email;
         this.localUser.aboutMe = newInfo.aboutMe || "";
       },
@@ -112,6 +126,26 @@ export default {
         this.localUser.aboutMe = `<p>${truncatedText}</p>`;
       }
     },
+    "localUser.nickname"(newVal) {
+      this.nicknameError = "";
+      if (newVal && newVal !== this.user.nickname) {
+        this.debounceCheckNicknameEdit(newVal);
+      }
+    },
+    user: {
+      immediate: true,
+      handler(newInfo) {
+        this.localUser.nickname = newInfo.nickname;
+        this.localUser.email = newInfo.email;
+        this.localUser.aboutMe = newInfo.aboutMe || "";
+      },
+    },
+  },
+  created() {
+    this.debounceCheckNicknameEdit = debounce(
+      this.checkNicknameEdit,
+      400
+    );
   },
   methods: {
     handleFileChange(event) {
@@ -125,19 +159,45 @@ export default {
         reader.readAsDataURL(file);
       }
     },
+    async checkNicknameEdit(nickname) {
+      if(!nickname || nickname.trim().length <3 ) {
+        this.nicknameExists = true;
+        this.nicknameMessage = "닉네임은 최소 3자 이상이어야 합니다."
+        return;
+      }
+      try {
+        const res = await axiosInstance.get("/api/users/check-nickname", {
+          params: { nickname },
+        });
+        if (res.data.exists && nickname !== this.user.nickname) {
+          this.nicknameExists = true;
+          this.nicknameMessage = "이미 사용 중인 닉네임입니다.";
+        } else {
+          this.nicknameExists = false;
+          this.nicknameMessage = "✅ 사용 가능한 닉네임입니다.";
+        }
+      } catch (e) {
+        this.nicknameError = "닉네임 확인 중 오류 발생";
+      }
+    },
     async updateProfile() {
       try {
         const formData = new FormData();
-        formData.append("nickname", this.localUser.username);
+        formData.append("nickname", this.localUser.nickname);
         formData.append("aboutMe", this.localUser.aboutMe); // 추가
 
         if (this.profileImageFile) {
           formData.append("files", this.profileImageFile);
         }
 
-        await axiosInstance.put(`/api/users/${this.user.id}`, formData, {
+        await axiosInstance.put("/api/users/me", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
+
+        if (this.nicknameExists) {
+          alert("닉네임이 중복되었습니다. 다른 닉네임을 입력해주세요.");
+          return;
+        }
 
         alert("프로필이 성공적으로 수정되었습니다.");
         this.$emit("profile-updated");
@@ -151,6 +211,9 @@ export default {
         console.error("프로필 수정 실패", error);
         alert("프로필 수정에 실패했습니다.");
       }
+    },
+    goToPasswordChange() {
+      this.$router.push("/change-password");
     },
   },
 };
