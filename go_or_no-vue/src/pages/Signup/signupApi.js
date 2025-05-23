@@ -19,6 +19,13 @@ export const verifyAuthCode = (email, code) => {
   return axios.post(`${BASE_URL}/api/auth/email/verify`, { email, code });
 };
 
+// 닉네임 중복 확인
+export const checkNicknameDuplicate = (nickname) => {
+  return axios.get(`${BASE_URL}/api/users/check-nickname`, {
+    params : { nickname }
+  });
+}
+
 // 회원가입 요청
 export const registerUser = (formData) => {
   return axios.post(`${BASE_URL}/api/users/signup`, formData, {

@@ -60,7 +60,7 @@ public class EmailAuthService {
 			            .nickname("guest_" + UUID.randomUUID().toString().substring(0, 8))	// 임시 닉네임
 			            .authProvider(AuthProviderType.LOCAL)
 			            .status(Status.PENDING)
-			            .role(Role.ROLE_USER)
+			            .role(Role.USER)
 			            .isVerified(false)
 			            .build();
 			        return userRepository.save(newUser);
