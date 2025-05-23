@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import axiosInstance from '../../../../utils/axiosInstance';
+
 export default {
     props: ['reviewId'],
     data() {
@@ -32,24 +34,22 @@ export default {
     },
     methods: {
         fetchComments() {
-            fetch(`/api/comments/review/${this.reviewId}`)
+            fetch(`http://localhost:8090/api/comments/review/${this.reviewId}`)
                 .then(res => res.json())
                 .then(data => (this.comments = data));
         },
-        submitComment() {
-            fetch('/api/comments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    reviewId: this.reviewId,
+        async submitComment() {
+            try {
+                await axiosInstance.post('/api/comments', {
+                    targetId: this.reviewId,
+                    targetType: 'REVIEW',
                     content: this.newComment.content,
-                }),
-            }).then(() => {
+                });
                 this.newComment.content = '';
                 this.fetchComments();
-            });
+            } catch(error) {
+                console.error("댓글 등록 실패: ", error);
+            }
         },
     },
     watch: {
