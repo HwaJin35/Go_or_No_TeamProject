@@ -64,6 +64,8 @@ public class SecurityConfig {
                 		"/actuator/**"			// actuator는 인증 없이 허용
                 		).permitAll()
             	.requestMatchers(GET, "/api/reviews/**").permitAll()
+            	.requestMatchers(GET, "/api/comments/**").permitAll()
+            	.requestMatchers(POST, "/api/comments").authenticated()
                 .anyRequest().authenticated()
             .and()
             .exceptionHandling(exceptionHandling -> 
