@@ -10,6 +10,9 @@ import com.goorno.canigo.entity.like.ReviewLikeDislike;
 import com.goorno.canigo.entity.report.ReviewReport;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -47,8 +50,14 @@ public class Review extends BaseEntity {
 	private String content;
 	
 	// 리뷰 (상세보기) 이미지
+	@ElementCollection
+	@CollectionTable(
+	    name = "review_files",
+	    joinColumns = @JoinColumn(name = "review_id") // 연결 키
+	)
+	@Column(name = "upload_file", columnDefinition = "LONGTEXT")
 	@Lob
-	private String uploadFile;
+	private List<String> uploadFiles;
 	
 	// 리뷰 작성자
 	@ManyToOne(fetch = FetchType.LAZY)

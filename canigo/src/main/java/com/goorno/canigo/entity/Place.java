@@ -69,7 +69,7 @@ public class Place extends BaseEntity {
 		name = "place_files",
 		joinColumns = @JoinColumn(name = "place_id")
 	)
-	@Column(name = "upload_file")
+	@Column(name = "upload_file", columnDefinition="LONGTEXT")
 	@Lob
 	private List<String> uploadFiles;
 	

@@ -55,6 +55,7 @@ public class SecurityConfig {
                 		"/swagger-ui.html",
                 		"/actuator/**"			// actuator는 인증 없이 허용
                 		).permitAll()
+            	.requestMatchers(GET, "/api/reviews/**").permitAll()
                 .anyRequest().authenticated()
             .and()
             .exceptionHandling(exceptionHandling -> 

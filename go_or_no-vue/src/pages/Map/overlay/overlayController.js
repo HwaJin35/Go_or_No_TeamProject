@@ -16,7 +16,7 @@ import { createOverlayContent } from "./overlayContentFactory";
 // Maps.vue에서 사용 시 아래와 같이 사용
 // this.registerOverlay = overlayController("register")
 // this.detailOverlay = overlayController("detail")
-export function overlayController(type = "register") {
+export function overlayController(type = ["register", "place"]) {
   let overlay = null;     // 현재 오버레이 인스턴스
   let isVisible = false;  // 오버레이 표시 상태
 

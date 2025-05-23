@@ -19,6 +19,12 @@
           @place-registered="fetchAllPlaces"
         />
       </div>
+      <PlaceDetailOverlay
+        v-if="placeDetailVisible"
+        :place="selectedPlace"
+        :visible="placeDetailVisible"
+        @close="placeDetailVisible = false"
+      />
     </div>
   </div>
 </template>
@@ -40,11 +46,13 @@ import { renderMarkers } from "./Map/marker/renderMarkers";
 import { createClickMarker } from "./Map/marker/createClickMarker";
 import { isLoggedIn } from "../utils/loginState";
 import RegisterPlacePopup from "./Map/place/RegisterPlacePopup.vue";
+import PlaceDetailOverlay from "./Map/overlay/PlaceDetailOverlay.vue";
 
 export default {
   name: "Maps",
   components: {
-    RegisterPlacePopup
+    RegisterPlacePopup,
+    PlaceDetailOverlay,
   },
   data() {
     // 이 컴포넌트가 내부적으로 갖고 있는 상태(state) 정의.
@@ -58,6 +66,9 @@ export default {
       openInfoWindow: null, // 현재 열려 있는 인포윈도우
       savedMarkers: [], // 백엔드에서 받아온 장소 데이터
       registerOverlay: null, // 장소 등록용 오버레이 컨트롤러 인스턴스
+      placeOverlay: null, // 장소 등록용 오버레이 컨트롤러 인스턴스
+      placeDetailVisible: false, // 장소 상세 페이지 표현 여부
+      selectedPlace: null, // 선택된 장소
     };
   },
   computed: {
@@ -199,14 +210,74 @@ export default {
         this.map,
         this.savedMarkers,
         (marker, place) => {
+
+          const imageSrc = place.uploadFiles;
+          // console.log('place.uploadFiles:', place.uploadFiles);
+
           const infoWindow = new kakao.maps.InfoWindow({
-            content: `<div style ="padding:5px;">${place.latitude}</div>`,
+            content: `
+              <div style="padding:10px; font-size:14px; max-width: 250px;">
+                <strong>${place.name}</strong><br/>
+                ${place.description}<br/>
+                ${
+                  imageSrc
+                    ? `<div style="text-align: center; margin-top: 15px;">
+                        <span style="font-weight: bold;">미리보기</span><br/>
+                        <img src="${imageSrc}" style="width: 100px; margin-top: 4px;" />
+                      </div>`
+                    : '이미지 없음'
+                }
+                    <button
+                      id="detail-btn"
+                      style="
+                        display: block;
+                        align-items: cetner;
+                        padding: 6px 10px;
+                        background-color: #4285f4;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;"
+                    >
+                      상세 보기
+                    </button>
+              </div>
+            `,
           });
+
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
           }
+          
           infoWindow.open(this.map, marker);
           this.openInfoWindow = infoWindow;
+
+          // 이미지가 완전히 로드된 후에 InfoWindow 열기
+          setTimeout(() => {
+            const img = document.getElementById("info-window-image");
+            if (img && !img.complete) {
+              img.onload = () => {
+                infoWindow.open(this.map, marker);
+                this.openInfoWindow = infoWindow;
+              };
+            } else {
+              infoWindow.open(this.map, marker);
+              this.openInfoWindow = infoWindow;
+            }
+
+            // 버튼 클릭 이벤트 연결 (DOM이 렌더링 된 뒤 실행해야 하므로 setTimeout을 짧게 줌)
+            const btn = document.getElementById("detail-btn");
+            if (btn) {
+              btn.addEventListener("click", () => {
+                if (confirm("이 장소의 상세 페이지를 보시겠습니까?")) {
+                  this.selectedPlace = place;
+                  this.placeDetailVisible = true;
+                  infoWindow.close();
+                  this.openInfoWindow = null;
+                }
+              });
+            }
+          }, 0);
         }
       );
 
