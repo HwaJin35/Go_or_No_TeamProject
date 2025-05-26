@@ -35,7 +35,10 @@ public class PasswordResetService {
 	private final PasswordEncoder passwordEncoder;
 	
 	@Value("${app.reset-password-url}")
-	String resetUrl;
+	String resetUrl;		// 비밀번호 재설정 url
+	
+	@Value("${spring.mail.username}")
+	private String mailUsername;	// SMTP 설정 발신자 메일 주소
 
 	// 비밀번호 재설정 링크 발송 메서드
     public void sendPasswordResetEmail(String email) {
@@ -73,6 +76,7 @@ public class PasswordResetService {
             );
 
             helper.setTo(user.getEmail());
+            helper.setFrom(mailUsername);
             helper.setSubject("[여기 가도 될까?] 비밀번호 재설정 안내");
             helper.setText(htmlContent, true); // ✅ HTML 사용 설정
 
