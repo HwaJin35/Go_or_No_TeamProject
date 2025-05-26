@@ -4,10 +4,14 @@
             <button class="close-btn" @click="$emit('close')" aria-label="닫기">닫기</button>
 
             <h2>{{ review.title }}</h2>
+            <p class="author">작성자: {{ review.userNickname }}</p>
             <p>{{ review.content }}</p>
-            <p class="author">작성자: {{ review.author }}</p>
 
-            <Comment :reviewId="review.id" />
+            <div class="comment-section">
+                <div class="comment-wrapper">
+                    <Comment :reviewId="review.id" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -66,5 +70,15 @@ export default {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 16px;
+}
+
+.comment-section {
+    margin-top: 24px;
+}
+
+.comment-wrapper {
+    max-height: 300px; /* 원하는 높이로 조절 */
+    overflow-y: auto;
+    padding-right: 8px; /* 스크롤바 공간 확보용 */
 }
 </style>

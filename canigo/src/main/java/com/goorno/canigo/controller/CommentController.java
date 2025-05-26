@@ -38,6 +38,7 @@ public class CommentController {
 	// 댓글 등록
 	@PostMapping
 	public ResponseEntity<CommentResponseDTO> createComment(@RequestBody CommentRequestDTO dto) {
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + dto.getTargetType());
 		User user = authUtil.getCurrentUser();
 		
 		try {

@@ -2,17 +2,21 @@
     <div class="review-list">
         <h3>리뷰</h3>
         <div v-if="reviews.length === 0">등록된 리뷰가 없습니다.</div>
-        <ul>
-            <li 
-                v-for="review in reviews" 
-                :key="review.id" 
-                @click="selectReview(review)"
-                class="review-item"
-            >
-                <h4>{{ review.title }}</h4>
-                <p>{{ review.content }}</p>
-            </li>
-        </ul>
+        <!-- 리뷰 목록 영역 -->
+        <div class="review-scroll-box">
+            <div v-if="reviews.length === 0">등록된 리뷰가 없습니다.</div>
+            <ul>
+                <li 
+                    v-for="review in reviews" 
+                    :key="review.id" 
+                    @click="selectReview(review)"
+                    class="review-item"
+                >
+                    <h4>{{ review.title }}</h4>
+                    <p>{{ review.content }}</p>
+                </li>
+            </ul>
+        </div>
 
         <button @click="showReviewPopup = true">리뷰 작성</button>
 
@@ -79,6 +83,15 @@ export default {
 </script>
 
 <style scoped>
+.review-scroll-box {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+}
+
 ul {
     list-style: none;
     padding: 0;
