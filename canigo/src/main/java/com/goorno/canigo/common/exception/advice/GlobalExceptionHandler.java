@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(UserException.class)
 	public ResponseEntity<ErrorResponse> handlerUserException(UserException ex, HttpServletRequest request) {
 		log.warn("UserException: {}", ex.getMessage());
-		return buildErrorResponse(HttpStatus.valueOf(ex.getStatusCode()), ex.getErrorMessage(), request.getRequestURI());
+	    return buildErrorResponse(ex.getErrorCode(), request.getRequestURI());  // 오버로딩 포맷으로 반환
 	}
 
 	// IllegalArgumentException
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
 			errorCode = ErrorCode.AUTHENTICATION_FAILED;
 		}
 		log.warn("AuthenticationException: {}", errorCode.getMessage());
-		return buildErrorResponse(HttpStatus.UNAUTHORIZED, errorCode.getMessage(), request.getRequestURI());
+		return buildErrorResponse(errorCode, request.getRequestURI());  // 오버로딩 포맷으로 반환
 	}
 	
 	// 그 외 Exception
@@ -95,5 +95,17 @@ public class GlobalExceptionHandler {
 				path
 		);
 		return new ResponseEntity<>(response, status);
+	}
+	
+	// 공통 응답 생성 메서드 오버로딩
+	private ResponseEntity<ErrorResponse> buildErrorResponse(ErrorCode errorCode, String path) {
+	    return ResponseEntity.status(errorCode.getStatus()).body(
+	            new ErrorResponse(
+	                errorCode.getStatus(),
+	                errorCode.name(),         // ErrorCode enum name으로 code 전달
+	                errorCode.getMessage(),
+	                path
+	            )
+	    );
 	}
 }

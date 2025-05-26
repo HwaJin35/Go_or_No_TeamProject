@@ -10,7 +10,10 @@
               placeholder="Nickname"
               v-model="localUser.nickname"
             />
-            <small v-if="nicknameMessage" :style="{ color: nicknameExists ? 'red' : 'green' }">
+            <small
+              v-if="nicknameMessage"
+              :style="{ color: nicknameExists ? 'red' : 'green' }"
+            >
               {{ nicknameMessage }}
             </small>
           </div>
@@ -142,10 +145,7 @@ export default {
     },
   },
   created() {
-    this.debounceCheckNicknameEdit = debounce(
-      this.checkNicknameEdit,
-      400
-    );
+    this.debounceCheckNicknameEdit = debounce(this.checkNicknameEdit, 400);
   },
   methods: {
     handleFileChange(event) {
@@ -160,9 +160,9 @@ export default {
       }
     },
     async checkNicknameEdit(nickname) {
-      if(!nickname || nickname.trim().length <3 ) {
+      if (!nickname || nickname.trim().length < 3) {
         this.nicknameExists = true;
-        this.nicknameMessage = "닉네임은 최소 3자 이상이어야 합니다."
+        this.nicknameMessage = "닉네임은 최소 3자 이상이어야 합니다.";
         return;
       }
       try {
@@ -208,8 +208,14 @@ export default {
         const fileInput = this.$el.querySelector('input[type="file"]');
         if (fileInput) fileInput.value = "";
       } catch (error) {
-        console.error("프로필 수정 실패", error);
-        alert("프로필 수정에 실패했습니다.");
+        const code = error.response?.data?.code;
+
+        if (code === "NICKNAME_DUPLICATE") {
+          alert("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.");
+        } else {
+          console.error("프로필 수정 실패", error);
+          alert(error.response?.data?.message || "프로필 수정에 실패했습니다.");
+        }
       }
     },
     goToPasswordChange() {

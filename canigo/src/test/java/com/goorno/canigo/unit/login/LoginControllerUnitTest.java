@@ -21,10 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goorno.canigo.controller.login.LoginController;
+import com.goorno.canigo.controller.auth.LoginController;
 import com.goorno.canigo.dto.login.LoginRequestDTO;
 import com.goorno.canigo.dto.login.LoginResponseDTO;
-import com.goorno.canigo.service.login.LoginService;
+import com.goorno.canigo.service.auth.LoginService;
 
 // LoginController 단위테스트
 @WebMvcTest(LoginController.class)

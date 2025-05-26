@@ -106,8 +106,29 @@ export default {
         this.form.confirmPassword = "";
         this.$router.push("/me");
       } catch (error) {
+        const code = error.response?.data?.code;
+
+        switch (code) {
+          case "PASSWORD_MISMATCH":
+            this.errors.currentPassword = "현재 비밀번호가 일치하지 않습니다.";
+            break;
+          case "PASSWORD_CONFIRM_MISMATCH":
+            this.errors.confirmPassword = "새 비밀번호가 일치하지 않습니다.";
+            break;
+          case "PASSWORD_DUPLICATE":
+            this.errors.newPassword =
+              "새 비밀번호는 현재 비밀번호와 달라야 합니다.";
+            break;
+          case "PASSWORD_TOO_SHORT":
+            this.errors.newPassword = "비밀번호는 최소 8자 이상이어야 합니다.";
+            break;
+          default:
+            alert(
+              error.response?.data?.message || "비밀번호 변경에 실패했습니다."
+            );
+        }
       }
-    }
+    },
   },
 };
 </script>

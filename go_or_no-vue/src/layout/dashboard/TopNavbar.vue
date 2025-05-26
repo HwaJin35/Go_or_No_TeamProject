@@ -27,13 +27,6 @@
               </div>
             </a>
           </li>
-          <!-- Stats -->
-          <li class="nav-item">
-            <router-link to="/stats" class="nav-link">
-              <i class="ti-user"></i>
-              <p>마이페이지</p>
-            </router-link>
-          </li>
           <!-- 드롭다운 -->
           <!-- 개수 동적 코딩 -->
           <drop-down
@@ -71,8 +64,14 @@
             </li>
           </template>
 
-          <!-- 로그인 한 사용자: 로그아웃 버튼 -->
+          <!-- 로그인 한 사용자: 마이페이지 + 로그아웃 버튼 -->
           <template v-else>
+            <li class="nav-item">
+              <router-link to="/me" class="nav-link">
+                <i class="ti-user"></i>
+                <p>마이페이지</p>
+              </router-link>
+            </li>
             <li class="nav-item">
               <a href="#" class="nav-link" @click.prevent="logout">
                 <i class="ti-unlock"></i>

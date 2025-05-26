@@ -54,10 +54,12 @@ public class SecurityConfig {
                 .requestMatchers(POST, "/api/places").authenticated()
             	.requestMatchers(
             			"/api/auth/**",
+            			"/reset-password",	// Vue의 진입경로 허용
+            			"/#/reset-password/**", // 비밀번호 정적 리소스 허용
             			"/api/users/check-email",
             			"/api/users/check-nickname",
                 		"/api/users/signup",
-                		"/api/login",				// 로그인, 회원가입, 인증, 중복확은 인증없이 허용
+                		"/api/login",				// 로그인, 회원가입, 인증, 중복확인은 인증없이 허용
                 		"/v3/api-docs/**",		// swagger URL은 인증없이 허용
                 		"/swagger-ui/**",
                 		"/swagger-ui.html",

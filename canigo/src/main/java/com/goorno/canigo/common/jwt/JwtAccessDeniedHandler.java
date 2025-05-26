@@ -11,10 +11,12 @@ import com.goorno.canigo.common.response.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 // 인가(Authorization) 실패 시 호출되는 핸들러
 // 권한이 없는 사용자가 보호된 리소스에 접근할 때 호출됨 (403 Forbidden)
 // 관리자 페이지 구현 시 사용
+@Slf4j
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 	
 	// ObjectMapper는 객체를 JSON 문자열로 변환해주는 Jackson 유틸리티

@@ -11,7 +11,13 @@ const router = new VueRouter({
 });
 
 // 전역 가드 설정(페이지 접근 권한 설정)
-const publicPages = ['/login', '/signup', '/maps']
+const publicPages = [
+    '/login',
+    '/signup',
+    '/maps',
+    '/reset-password',
+    '/reset-password/confirm',
+  ]
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('accessToken');
 

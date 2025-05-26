@@ -88,7 +88,7 @@ public class User extends BaseEntity {
 	// 활성화 여부 (활성화, 비활성화, 차단, 탈퇴)
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Status status = Status.ACTIVE; // 기본값 ACTIVE
+	private Status status = Status.INACTIVE; // 기본값 INACTIVE
 	
 	// 차단 기간 관련 설정
 	// 차단 시작일

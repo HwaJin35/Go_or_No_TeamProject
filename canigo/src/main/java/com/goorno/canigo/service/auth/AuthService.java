@@ -1,5 +1,6 @@
 package com.goorno.canigo.service.auth;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.UUID;
@@ -8,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.goorno.canigo.dto.auth.EmailAuthRequestDTO;
 import com.goorno.canigo.dto.auth.EmailVerifyDTO;
@@ -30,11 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailAuthService {
+public class AuthService {
 	
 	private final JavaMailSender mailSender;
 	private final UserRepository userRepository;
-	private final TemplateEngine templateEngine;	// 타임리프 템플릿 엔진
+	private final SpringTemplateEngine templateEngine;	// 타임리프 템플릿 엔진
 	
 	@Value("${spring.mail.username}")
 	private String mailUsername;	// SMTP 설정 발신자 메일 주소
@@ -87,7 +88,9 @@ public class EmailAuthService {
         // 메일 전송
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(
+            		  message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name()
+            );
 
             helper.setTo(email);
             helper.setFrom(mailUsername);

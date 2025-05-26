@@ -1,4 +1,4 @@
-package com.goorno.canigo.service.login;
+package com.goorno.canigo.service.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -18,13 +18,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LoginServiceImpl implements LoginService {
+public class LoginService {
 
 	private final UserRepository userRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtil jwtUtil;
 
-	@Override
 	public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
 		String email = loginRequestDTO.getEmail();
 

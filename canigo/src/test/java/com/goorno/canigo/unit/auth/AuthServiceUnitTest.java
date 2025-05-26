@@ -29,12 +29,12 @@ import com.goorno.canigo.dto.auth.EmailVerifyDTO;
 import com.goorno.canigo.entity.User;
 import com.goorno.canigo.entity.enums.AuthProviderType;
 import com.goorno.canigo.repository.UserRepository;
-import com.goorno.canigo.service.auth.EmailAuthService;
+import com.goorno.canigo.service.auth.AuthService;
 
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 
-class EmailAuthServiceUnitTest {
+class AuthServiceUnitTest {
 
     @Mock
     private JavaMailSender javaMailSender;
@@ -46,7 +46,7 @@ class EmailAuthServiceUnitTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private EmailAuthService emailAuthService;
+    private AuthService emailAuthService;
 
     private User user;
 

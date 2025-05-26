@@ -22,12 +22,6 @@
       </template>
       <!-- 모바일 환경 사이드바 메뉴 -->
       <mobile-menu>
-        <li class="nav-item">
-          <router-link to="/stats" class="nav-link">
-              <i class="ti-user"></i>
-              <p>마이페이지</p>
-            </router-link>
-        </li>
         <!-- 알림 개수 동적 코딩 -->
         <drop-down
           class="nav-item"
@@ -47,31 +41,37 @@
             <p>보기 모드 변경</p>
           </a>
         </li>
-  <!-- 로그인 안 한 경우: 로그인, 회원가입 버튼 -->
-  <template v-if="!isLoggedIn">
-    <li class="nav-item">
-      <router-link to="/login" class="nav-link">
-        <i class="ti-lock"></i>
-        <p>로그인</p>
-      </router-link>
-    </li>
-    <li class="nav-item signup">
-      <router-link to="/signup" class="nav-link">
-        <i class="ti-pencil-alt"></i>
-        <p>회원가입</p>
-      </router-link>
-    </li>
-  </template>
+        <!-- 로그인 안 한 경우: 로그인, 회원가입 버튼 -->
+        <template v-if="!isLoggedIn">
+          <li class="nav-item">
+            <router-link to="/login" class="nav-link">
+              <i class="ti-lock"></i>
+              <p>로그인</p>
+            </router-link>
+          </li>
+          <li class="nav-item signup">
+            <router-link to="/signup" class="nav-link">
+              <i class="ti-pencil-alt"></i>
+              <p>회원가입</p>
+            </router-link>
+          </li>
+        </template>
 
-  <!-- 로그인 한 경우: 로그아웃 버튼 -->
-  <template v-else>
-    <li class="nav-item">
-      <a href="#" class="nav-link" @click.prevent="logout">
-        <i class="ti-unlock"></i>
-        <p>로그아웃</p>
-      </a>
-    </li>
-  </template>
+        <!-- 로그인 한 경우: 마이페이지, 로그아웃 버튼 -->
+        <template v-else>
+          <li class="nav-item">
+            <router-link to="/me" class="nav-link">
+              <i class="ti-user"></i>
+                <p>마이페이지</p>
+            </router-link>
+              </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" @click.prevent="logout">
+              <i class="ti-unlock"></i>
+              <p>로그아웃</p>
+            </a>
+          </li>
+        </template>
 
         <li class="divider"></li>
       </mobile-menu>

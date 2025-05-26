@@ -7,7 +7,8 @@
       <div>
         <label>이메일</label>
         <div class="input-group">
-          <input class="input-wide"
+          <input
+            class="input-wide"
             type="email"
             v-model="email"
             required
@@ -105,16 +106,16 @@
             type="button"
             @click="checkNickname"
             :disabled="checkingNickname || nicknameChecked"
-            >
+          >
             중복 확인
           </button>
         </div>
-          <p
-            v-if="nicknameCheckMessage"
-            :style="{ color: nicknameExists ? 'red' : 'green', marginTop: '4px' }"
-          >
-            {{ nicknameCheckMessage }}
-          </p>
+        <p
+          v-if="nicknameCheckMessage"
+          :style="{ color: nicknameExists ? 'red' : 'green', marginTop: '4px' }"
+        >
+          {{ nicknameCheckMessage }}
+        </p>
       </div>
 
       <div>
@@ -127,7 +128,9 @@
       </div>
       <div class="signup-btn-group">
         <button class="half-btn signup-btn" type="submit">회원가입</button>
-        <button class="half-btn home-btn" @click="$router.push('/')">홈으로</button>
+        <button class="half-btn home-btn" @click="$router.push('/')">
+          홈으로
+        </button>
       </div>
     </form>
   </div>
@@ -274,8 +277,12 @@ export default {
         this.verifyError = "";
         this.message = "이메일 인증이 완료되었습니다.";
       } catch (e) {
-        this.verifyError = "인증코드가 일치하지 않습니다. ";
-        console.error(e.response?.data || e.message);
+        const code = e.response?.data?.code;
+        if (code === "EMAIL_NOT_VERIFIED") {
+          this.verifyError = "이메일 인증이 완료되지 않았습니다.";
+        } else {
+          this.verifyError = "인증코드가 일치하지 않습니다.";
+        }
       } finally {
         this.loading = false;
       }
@@ -309,8 +316,7 @@ export default {
 
     // 회원 가입 요청
     async registerUser() {
-
-      if(!this.emailChecked) {
+      if (!this.emailChecked) {
         this.message = "이메일 중복 확인은 필수입니다.";
         return;
       }
@@ -325,7 +331,7 @@ export default {
         return;
       }
 
-      if(!this.nickname) {
+      if (!this.nickname) {
         this.message = "닉네임을 입력하세요.";
         return;
       }
@@ -352,16 +358,25 @@ export default {
           formData.append("files", this.profileImageFile);
         }
 
-        const signupData = await registerUser(formData);
-
-        // console.log("회원가입 데이터", signupData);
+        await registerUser(formData);
         alert("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
-
-        // 회원가입 성공후 원하는 곳으로 이동
-        this.$router.push("/login"); // 로그인 페이지로 이동
+        this.$router.push("/login");
       } catch (error) {
-        console.error(error.response?.data || error.message);
-        alert("회원 가입에 오류가 발생하였습니다.");
+        const code = error.response?.data?.code;
+        switch (code) {
+          case "ALREADY_REGISTERED":
+            this.message = "이미 가입된 사용자입니다.";
+            break;
+          case "EMAIL_NOT_VERIFIED":
+            this.message = "이메일 인증이 완료되지 않았습니다.";
+            break;
+          case "NICKNAME_DUPLICATE":
+            this.message = "이미 사용 중인 닉네임입니다.";
+            break;
+          default:
+            this.message =
+              error.response?.data?.message || "회원 가입에 실패했습니다.";
+        }
       }
     },
 
@@ -458,7 +473,7 @@ export default {
 
 .signup-container button.btn-verify:hover {
   background-color: #45a049;
-} 
+}
 
 .signup-btn-group {
   display: flex;
@@ -483,7 +498,7 @@ export default {
 }
 
 .half-btn {
-  width: 50%; 
+  width: 50%;
   padding: 10px;
   border: none;
   color: white;

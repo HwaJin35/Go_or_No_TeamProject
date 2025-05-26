@@ -1,4 +1,4 @@
-package com.goorno.canigo.controller.login;
+package com.goorno.canigo.controller.auth;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goorno.canigo.dto.login.LoginRequestDTO;
 import com.goorno.canigo.dto.login.LoginResponseDTO;
-import com.goorno.canigo.service.login.LoginService;
+import com.goorno.canigo.service.auth.LoginService;
 
 import lombok.RequiredArgsConstructor;
 

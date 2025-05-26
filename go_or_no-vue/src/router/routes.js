@@ -16,7 +16,9 @@ import Favorites from "@/pages/Favorites.vue";
 import Message from "@/pages/Message.vue";
 import Popularity from "@/pages/Popularity.vue";
 import Signup from "@/pages/Signup/Signup.vue";
-import Login from "@/pages/Login.vue";
+import Login from "@/pages/Auth/Login.vue";
+import ResetPasswordRequest from "@/pages/Auth/ResetPasswordRequest.vue";
+import ResetPasswordForm from "@/pages/Auth/ResetPasswordForm.vue";
 import ChangePassword from "@/pages/UserProfile/ChangePassword.vue";
 
 
@@ -68,7 +70,7 @@ const routes = [
         component: Dashboard,
       },
       {
-        path: "stats",
+        path: "me",
         name: "마이페이지",
         component: UserProfile,
       },
@@ -102,6 +104,16 @@ const routes = [
         name: "비밀번호 변경",
         component: ChangePassword       
       },
+      {
+      path: "/reset-password",
+      name: "비밀번호 재설정",
+      component: ResetPasswordRequest,
+    },
+    {
+      path: "/reset-password/confirm",
+      name: "새 비밀번호",
+      component: ResetPasswordForm,
+    },
     ],
   },
   { path: "*", component: NotFound },

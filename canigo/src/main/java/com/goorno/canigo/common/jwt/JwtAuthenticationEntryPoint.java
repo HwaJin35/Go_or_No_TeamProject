@@ -36,7 +36,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		ErrorResponse error = new ErrorResponse(
 			401,								// 상태 코드
 			"UNAUTHORIZED",						// 에러 요약
-			"인증이 필요합니다.",				// 사용자에게 보이는 메시지
+			"인증이 필요합니다.",				// 메시지
 			request.getRequestURI()				// 요청 경로
 		);
 

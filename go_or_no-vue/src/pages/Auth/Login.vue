@@ -12,6 +12,14 @@
         <button class="half-btn login-btn" type="submit">로그인</button>
         <button class="half-btn home-btn" @click="$router.push('/')">홈으로</button>
       </div>
+      <div class="text-right mt-4">
+      <router-link
+        to="/reset-password"
+        class="text-sm text-green-600 hover:underline"
+      >
+        비밀번호를 잊으셨나요?
+      </router-link>
+    </div>
     </form>
   </div>
 </template>

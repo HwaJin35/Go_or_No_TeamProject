@@ -11,6 +11,8 @@ public enum ErrorCode {
 	EMAIL_NOT_VERIFIED(400, "이메일 인증이 완료되지 않았습니다."),
 	ALREADY_REGISTERED(400, "이미 가입이 완료된 사용자입니다."),
 	EMAIL_NOT_FOUND(400, "이메일 인증이 먼저 필요합니다."),
+	INVALID_PASSWORD_RESET_TOKEN(400, "비밀번호 재설정 토큰이 유효하지 않습니다."),
+	EXPIRED_PASSWORD_RESET_TOKEN(400, "토큰이 만료되었습니다."),
 	
 	//401 Unauthorized
 	AUTHENTICATION_FAILED(401, "인증에 실패했습니다."),

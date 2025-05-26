@@ -17,21 +17,21 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goorno.canigo.controller.auth.EmailAuthController;
+import com.goorno.canigo.controller.auth.AuthController;
 import com.goorno.canigo.dto.auth.EmailAuthRequestDTO;
 import com.goorno.canigo.dto.auth.EmailVerifyDTO;
-import com.goorno.canigo.service.auth.EmailAuthService;
+import com.goorno.canigo.service.auth.AuthService;
 
-@WebMvcTest(controllers = EmailAuthController.class)
-@ContextConfiguration(classes = EmailAuthController.class) // EmailAuthController만
+@WebMvcTest(controllers = AuthController.class)
+@ContextConfiguration(classes = AuthController.class) // EmailAuthController만
 @AutoConfigureMockMvc(addFilters=false)	// 테스트를 위해 시큐리티 필터 제거
-class EmailAuthControllerUnitTest {
+class AuthControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private EmailAuthService emailAuthService; // 서비스 Mock
+    private AuthService emailAuthService; // 서비스 Mock
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -22,7 +22,7 @@ import com.goorno.canigo.dto.login.LoginRequestDTO;
 import com.goorno.canigo.dto.login.LoginResponseDTO;
 import com.goorno.canigo.entity.User;
 import com.goorno.canigo.repository.UserRepository;
-import com.goorno.canigo.service.login.LoginServiceImpl;
+import com.goorno.canigo.service.auth.LoginService;
 
 //LoginService 단위 테스트
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +38,7 @@ public class LoginServiceUnitTest {
 	private JwtUtil jwtUtil;
 	
 	@InjectMocks
-	private LoginServiceImpl loginService;
+	private LoginService loginService;
 	
 	private LoginRequestDTO loginRequestDTO;
 	private User user;
