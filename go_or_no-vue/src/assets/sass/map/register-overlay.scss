@@ -1,12 +1,13 @@
 /* 장소 등록 오버레이 스타일 */
 .kakao-overlay-wrap {
+  /* 기존 스타일 유지 */
   position: absolute !important;
   pointer-events: auto;
   z-index: 1000 !important;
   left: 0;
   bottom: 40px;
-  width: 288px;
-  height: 132px;
+  width: 292px;
+  height: 162px;
   margin-left: -144px;
   text-align: left;
   overflow: hidden;
@@ -20,8 +21,8 @@
   }
 
   .info {
-    width: 286px;
-    height: 120px;
+    width: 290px;
+    height: 150px;
     border-radius: 5px;
     border-bottom: 2px solid #ccc;
     border-right: 1px solid #ccc;
@@ -35,8 +36,9 @@
 
     .title {
       padding: 5px 0 0 10px;
-      height: 30px;
-      background: #eee;
+      height: 35px;
+      background: #007bff;
+      color: white;
       border-bottom: 1px solid #ddd;
       font-size: 18px;
       font-weight: bold;
@@ -46,7 +48,7 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      color: #888;
+      color: white;
       width: 17px;
       height: 17px;
       background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
@@ -63,12 +65,15 @@
       .desc {
         position: relative;
         margin: 13px 0 0 90px;
-        height: 75px;
+        height: 100px;
 
         .ellipsis {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          white-space: normal;  /* 여러 줄 허용 */
+          overflow-wrap: break-word; /* 단어 단위 줄바꿈 허용 */
+          overflow: visible;  /* 넘침 숨김 해제 */
+          text-overflow: clip;  /* 말줄임 없앰 */
+          max-height: 4.5em;  /* 최대 3줄 정도 높이 제한 (1.5em * 3줄) */
+          line-height: 1.5em;
         }
 
         .jibun {
@@ -82,11 +87,13 @@
         position: absolute;
         top: 6px;
         left: 5px;
-        width: 73px;
-        height: 71px;
+        width: 90px;
+        height: 90px;
         border: 1px solid #ddd;
         color: #888;
         overflow: hidden;
+        margin-top: 6px;
+        margin-left: 4px;
       }
     }
   }
@@ -104,5 +111,34 @@
 
   .link {
     color: #5085bb;
+  }
+
+  /* 버튼 디자인 추가 */
+  .register-btn, .cancel-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    user-select: none;
+  }
+
+  .register-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  .register-btn:hover {
+    background-color: #0069d9;
+  }
+
+  .cancel-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    margin-left: 8px;
+  }
+  .cancel-btn:hover {
+    background-color: #ccc;
   }
 }

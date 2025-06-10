@@ -49,14 +49,23 @@ public class CommentService {
 			comment.setCommunity(community);
 		}
 		
+		// 대상이 부모댓글인지 확인
+		if (dto.getParentId() != null) {
+			Comment parentComment = commentRepository.findById(dto.getParentId())
+					.orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다."));
+			comment.setParent(parentComment);
+		}
+		
 		commentRepository.save(comment);
 		return CommentResponseDTO.fromEntity(comment);
 	}
 	
 	public List<CommentResponseDTO> getCommentsByReviewId(Long reviewId) {
-		return commentRepository.findByReviewId(reviewId)
-				.stream()
-				.map(CommentResponseDTO::fromEntity)
-				.collect(Collectors.toList());
+	    // 리뷰에 해당하는 댓글 중 부모 댓글(parent == null)만 조회
+	    List<Comment> parentComments = commentRepository.findWithChildrenByReviewId(reviewId);
+
+	    return parentComments.stream()
+	        .map(CommentResponseDTO::fromEntity) // 재귀 변환 수행
+	        .collect(Collectors.toList());
 	}
 }

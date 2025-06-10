@@ -1,7 +1,7 @@
 <template>
     <div class="overlay-container" v-if="visible">
         <div class="overlay-content">
-            <button class="close-btn" @click="close">닫기 ✖</button>
+            <button class="close-btn" @click="close" aria-label="닫기">✖</button>
 
             <div class="left-panel">
                 <h2>{{ place.name }}</h2>
@@ -23,7 +23,6 @@
 
 <script>
 import Review from '../elements/review/Review.vue';
-import Comment from '../elements/comment/Comment.vue';
 
 export default {
     name: 'PlaceDetailOverlay',
@@ -91,11 +90,25 @@ export default {
 
 .close-btn {
     position: absolute;
-    top: 20px;
-    right: 30px;
-    background: none;
+    top: 16px;
+    right: 20px;
+    background: #f0f0f0;
     border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
     font-size: 18px;
+    font-weight: bold;
+    color: #333;
     cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    line-height: 36px; /* 버튼 높이와 동일 */
+    text-align: center;
+    padding: 0;
+}
+
+.close-btn:hover {
+    background: #ccc;
 }
 </style>

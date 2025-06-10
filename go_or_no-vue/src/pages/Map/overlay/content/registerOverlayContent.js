@@ -24,11 +24,11 @@ export function registerOverlayContent({ logoImage, onRegister, onCancel }) {
       </div>
       <div class="body">
         <div class="img">
-          <img src="${logoImage}" width="73" height="70" alt="장소 이미지" />
+          <img src="${logoImage}" width="90" height="90" alt="장소 이미지" />
         </div>
         <div class="desc">
-          <div class="ellipsis">선택한 위치에 장소를 등록하시겠습니까?</div>
-          <div style="margin-top: 10px; display: flex; gap: 10px;">
+          <div class="ellipsis" style="margin-top: 20px; margin-left: 30px;">선택한 위치에<br><strong>장소</strong>를 등록하시겠습니까?</div>
+          <div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center;">
             <button class="register-btn" style="padding: 5px 10px; cursor: pointer;">등록</button>
             <button class="cancel-btn" style="padding: 5px 10px; cursor: pointer;">취소</button>
           </div>

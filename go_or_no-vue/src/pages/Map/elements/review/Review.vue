@@ -1,7 +1,6 @@
 <template>
     <div class="review-list">
         <h3>리뷰</h3>
-        <div v-if="reviews.length === 0">등록된 리뷰가 없습니다.</div>
         <!-- 리뷰 목록 영역 -->
         <div class="review-scroll-box">
             <div v-if="reviews.length === 0">등록된 리뷰가 없습니다.</div>
@@ -14,11 +13,13 @@
                 >
                     <h4>{{ review.title }}</h4>
                     <p>{{ review.content }}</p>
+                    <p>{{ formatDate(review.createdAt) }}</p>
                 </li>
             </ul>
         </div>
 
-        <button @click="showReviewPopup = true">리뷰 작성</button>
+        <!-- 리뷰 작성버튼 -->
+        <button class="write-review-btn" @click="showReviewPopup = true">✍️ 리뷰 작성하기</button>
 
         <!-- 리뷰 상세 컴포넌트 -->
         <ReviewDetailOverlay 
@@ -74,6 +75,10 @@ export default {
         selectReview(review) {
             this.selectedReview = review;
         },
+        formatDate(date) {
+            const d = new Date(date);
+            return d.toLocaleString();
+        },
     },
     mounted() {
         console.log('[Review.vue] placeId:', this.placeId);
@@ -100,13 +105,54 @@ ul {
 .review-item {
     cursor: pointer;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    margin: 10px;
+    border-bottom: 3px solid #ddd;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     border-radius: 4px;
 }
 
+.review-item h4,
+.review-item p {
+    margin: 4px 0; /* 위아래 4px */
+    line-height: 1.4;
+    font-size: 14px;
+}
+.review-item h4 {
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
+}
+.review-item p {
+    margin: 4px 0;
+    line-height: 1.4;
+    font-size: 14px;
+    white-space: nowrap;       /* 줄바꿈 없이 한 줄로 */
+    overflow: hidden;          /* 넘친 내용 숨김 */
+    text-overflow: ellipsis;   /* ... 으로 표시 */
+}
+
+/* 리뷰 목록 호버 색상 */
 .review-item:hover {
-    background-color: #4caf50;
+    background-color: rgba(0, 123, 255, 0.5); /* 파란색을 10%만 입힘 */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 리뷰 작성하기 버튼 */
+.write-review-btn {
+    background: linear-gradient(to right, #007bff, #0154ad);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, filter 0.5s ease;
+}
+
+.write-review-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.8); /* 밝기를 80%로 */
 }
 </style>
