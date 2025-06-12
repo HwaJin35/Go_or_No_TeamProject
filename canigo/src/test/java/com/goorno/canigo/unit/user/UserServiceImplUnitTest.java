@@ -31,7 +31,7 @@ import com.goorno.canigo.entity.enums.Role;
 import com.goorno.canigo.entity.enums.Status;
 import com.goorno.canigo.mapper.user.UserMapper;
 import com.goorno.canigo.repository.UserRepository;
-import com.goorno.canigo.service.user.UserServiceImpl;
+import com.goorno.canigo.service.user.UserService;
 
 // UserServiceImpl 단위테스트
 // 모든 Mokito 설정(mock 동작)이 예상대로 작동하고, 최종 결과가 assert 구문을 통과하면 성공
@@ -51,7 +51,7 @@ public class UserServiceImplUnitTest {
 
 	// @InjectMocks - 테스트할 대상 클래스에 @Mock으로 만든 객체들을 주입
 	@InjectMocks
-	private UserServiceImpl userService;
+	private UserService userService;
 
 	private UserRequestDTO requestDTO;
 	private UserResponseDTO responseDTO;

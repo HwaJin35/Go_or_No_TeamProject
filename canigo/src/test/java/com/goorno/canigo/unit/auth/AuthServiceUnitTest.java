@@ -29,7 +29,7 @@ import com.goorno.canigo.dto.auth.EmailVerifyDTO;
 import com.goorno.canigo.entity.User;
 import com.goorno.canigo.entity.enums.AuthProviderType;
 import com.goorno.canigo.repository.UserRepository;
-import com.goorno.canigo.service.auth.AuthService;
+import com.goorno.canigo.service.auth.EmailAuthService;
 
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
@@ -46,7 +46,7 @@ class AuthServiceUnitTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private AuthService emailAuthService;
+    private EmailAuthService emailAuthService;
 
     private User user;
 
@@ -90,7 +90,7 @@ class AuthServiceUnitTest {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         // when
-        emailAuthService.verityCode(new EmailVerifyDTO(user.getEmail(), authCode));
+        emailAuthService.verifyCode(new EmailVerifyDTO(user.getEmail(), authCode));
 
         // then
         assertTrue(user.isVerified());
@@ -110,7 +110,7 @@ class AuthServiceUnitTest {
 
         // when + then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            emailAuthService.verityCode(new EmailVerifyDTO(user.getEmail(), "123456"));
+            emailAuthService.verifyCode(new EmailVerifyDTO(user.getEmail(), "123456"));
         });
 
         assertEquals("인증 코드가 일치하지 않습니다.", exception.getMessage());
@@ -127,7 +127,7 @@ class AuthServiceUnitTest {
 
         // when + then
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            emailAuthService.verityCode(new EmailVerifyDTO(user.getEmail(), "123456"));
+            emailAuthService.verifyCode(new EmailVerifyDTO(user.getEmail(), "123456"));
         });
 
         assertEquals("인증 코드가 만료되었습니다. 다시 요청해 주세요", exception.getMessage());

@@ -12,18 +12,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goorno.canigo.controller.auth.EmailAuthController;
+import com.goorno.canigo.controller.auth.AuthController;
 import com.goorno.canigo.dto.auth.EmailAuthRequestDTO;
 import com.goorno.canigo.dto.auth.EmailVerifyDTO;
 import com.goorno.canigo.service.auth.EmailAuthService;
 
-@WebMvcTest(controllers = EmailAuthController.class)
-@ContextConfiguration(classes = EmailAuthController.class) // EmailAuthController만
+@WebMvcTest(controllers = AuthController.class)
+@ContextConfiguration(classes = AuthController.class) // EmailAuthController만
 @AutoConfigureMockMvc(addFilters=false)	// 테스트를 위해 시큐리티 필터 제거
 class EmailAuthControllerUnitTest {
 
@@ -58,7 +57,7 @@ class EmailAuthControllerUnitTest {
         // given
         EmailVerifyDTO verifyDTO = new EmailVerifyDTO("test@example.com", "123456");
 
-        doNothing().when(emailAuthService).verityCode(verifyDTO);
+        doNothing().when(emailAuthService).verifyCode(verifyDTO);
 
         // when & then
         mockMvc.perform(post("/api/auth/email/verify")
