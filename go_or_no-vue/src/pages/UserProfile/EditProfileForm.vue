@@ -150,6 +150,7 @@ export default {
   methods: {
     handleFileChange(event) {
       const file = event.target.files[0];
+      // console.log("[LOG] 선택한 파일:", file);
       this.profileImageFile = file;
       if (file) {
         const reader = new FileReader();
@@ -187,15 +188,20 @@ export default {
         formData.append("aboutMe", this.localUser.aboutMe); // 추가
 
         if (this.profileImageFile) {
-          formData.append("files", this.profileImageFile);
+          formData.append("uploadFiles", this.profileImageFile);
         }
 
-        await axiosInstance.put("/api/users/me", formData, {
+        const response = await axiosInstance.put("/api/users/me", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
+        if(response.ok) {
+          // 성공 시 TopNavbar의 사용자 정보 새로고침
+          this.$root.$emit('refreshUserInfo');
+        }
+
         if (this.nicknameExists) {
-          alert("닉네임이 중복되었습니다. 다른 닉네임을 입력해주세요.");
+          alert("다른 닉네임을 입력해주세요.");
           return;
         }
 

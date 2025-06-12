@@ -1,9 +1,16 @@
 package com.goorno.canigo.integration.user;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,14 +22,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goorno.canigo.dto.auth.EmailAuthRequestDTO;
+import com.goorno.canigo.dto.auth.EmailVerifyDTO;
+import com.goorno.canigo.entity.User;
 import com.goorno.canigo.repository.UserRepository;
 
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 
 /**
@@ -35,7 +49,7 @@ import jakarta.transaction.Transactional;
 @AutoConfigureMockMvc
 @ActiveProfiles("test") // test 환경으로 properties 세팅
 @Transactional
-@WithMockUser		// 테스트용 시큐리티 설정, 사용자 인증을 위한 Mock 주입
+@WithMockUser(username = "testuser@example.com")		// 테스트용 시큐리티 설정, 사용자 인증을 위한 Mock 주입
 public class UserControllerIntegrationTest {
 	@Autowired
 	private UserRepository userRepository;
@@ -49,6 +63,9 @@ public class UserControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     private MockMultipartFile profileImage;
+    
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @BeforeEach
     void setUp() {    	
@@ -61,12 +78,41 @@ public class UserControllerIntegrationTest {
         		"image/jpeg",               // MIME 타입
         		"test image content".getBytes(StandardCharsets.UTF_8) // 파일 내용
         	);
+    	MimeMessage fakeMessage = mock(MimeMessage.class);
+        when(javaMailSender.createMimeMessage()).thenReturn(fakeMessage);
+        doNothing().when(javaMailSender).send(any(MimeMessage.class));
     }
 
     @Test
     @DisplayName("회원가입 통합 테스트")
     void registerUser() throws Exception {
+        
+        // 이메일 인증 코드 발송 요청
+        EmailAuthRequestDTO sendDTO = new EmailAuthRequestDTO("testuser@example.com");
 
+        mockMvc.perform(post("/api/auth/email/send")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(sendDTO)))
+            .andExpect(status().isOk())
+            .andExpect(content().string("인증 코드가 이메일로 발송되었습니다."));
+
+        // 유저의 인증 코드(authToken) 직접 꺼냄
+        User user = userRepository.findByEmail("testuser@example.com").orElseThrow();
+        String authToken = user.getAuthToken();
+
+        // 이메일 인증 요청
+        EmailVerifyDTO verifyDTO = new EmailVerifyDTO("testuser@example.com", authToken);
+
+        mockMvc.perform(post("/api/auth/email/verify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(verifyDTO)))
+            .andExpect(status().isOk())
+            .andExpect(content().string("이메일 인증이 완료되었습니다."));
+
+        // isVerified가 true인지 검증
+        User verifiedUser = userRepository.findByEmail("testuser@example.com").orElseThrow();
+        assertTrue(verifiedUser.isVerified());
+    	
         // when - 회원가입 API 호출
     	 mockMvc.perform(multipart("/api/users/signup")
                  .file(profileImage)
@@ -122,18 +168,7 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("회원 정보 수정 통합 테스트")
     void updateUser() throws Exception {
-        // given - 기존 회원가입
-        String responseBody = mockMvc.perform(multipart("/api/users/signup")
-        		.file(profileImage)
-                .param("email", "testuser@example.com")
-                .param("password", "password123")
-                .param("nickname", "testnickname")
-                .param("authProvider", "LOCAL"))
-        .andExpect(status().isOk())
-        .andReturn().getResponse().getContentAsString();
-
-        // responseBody에서 id 파싱
-        Long id = objectMapper.readTree(responseBody).get("id").asLong();
+    	registerUser();
 
         // 수정용 가짜 파일
         MockMultipartFile updatedProfileImage = new MockMultipartFile(
@@ -144,7 +179,7 @@ public class UserControllerIntegrationTest {
         );
         
         // when
-        mockMvc.perform(multipart("/api/users/{id}", id)
+        mockMvc.perform(multipart("/api/users/me")
                 .file(updatedProfileImage)
                 .with(req -> { req.setMethod("PUT"); return req; }) // multipart 기본 POST -> PUT으로 강제 변경
                 .param("nickname", "updatedNickname")
@@ -157,18 +192,9 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("회원 비활성화 통합 테스트")
     void deactivateUser() throws Exception {
-        // given - 회원가입으로 유저 생성, id 파싱
-    	String responseBody = mockMvc.perform(multipart("/api/users/signup")
-                .file(profileImage)
-                .param("email", "testuser@example.com")
-                .param("password", "password123")
-                .param("nickname", "testnickname")
-                .param("authProvider", "LOCAL"))
-        .andExpect(status().isOk())
-        .andReturn().getResponse().getContentAsString();
-
-        Long id = objectMapper.readTree(responseBody).get("id").asLong();
-        
+    	registerUser(); // 인증 + 가입까지 수행
+    	Long id = userRepository.findByEmail("testuser@example.com").orElseThrow().getId();
+    	
         // when - 해당 ID로 비활성화 API 호출
         mockMvc.perform(patch("/api/users/{id}/deactivate", id))
         // then - 정상적으로 204 No Content가 나오는지 검증
@@ -179,20 +205,10 @@ public class UserControllerIntegrationTest {
     @Test
     @DisplayName("회원 삭제 통합 테스트")
     void deleteUser() throws Exception {
-    	 // given - 회원가입으로 유저를 생성, id 파싱
-    	String responseBody = mockMvc.perform(multipart("/api/users/signup")
-                .file(profileImage)
-                .param("email", "testuser@example.com")
-                .param("password", "password123")
-                .param("nickname", "testnickname")
-                .param("authProvider", "LOCAL"))
-        .andExpect(status().isOk())
-        .andReturn().getResponse().getContentAsString();
-
-        Long id = objectMapper.readTree(responseBody).get("id").asLong();
+    	registerUser(); // 인증 + 가입
 
         // when - 해당 ID로 삭제 API 호출
-        mockMvc.perform(delete("/api/users/{id}", id))
+        mockMvc.perform(delete("/api/users/me"))
         // then - 정상적으로 204 No Content가 나오는지 검증
                 .andExpect(status().isNoContent());
     }

@@ -1,13 +1,12 @@
 <template>
-  <div class="max-w-md mx-auto mt-16 p-6 border rounded-lg shadow bg-white">
-    <h2 class="text-2xl font-semibold text-center mb-6 text-gray-800">비밀번호 재설정</h2>
-    <form @submit.prevent="submitNewPassword" class="space-y-4">
+  <div class="reset-form-container">
+    <h2>비밀번호 재설정</h2>
+    <form @submit.prevent="submitNewPassword" class="reset-form">
       <div>
         <input
           v-model="newPassword"
           type="password"
           placeholder="새 비밀번호 입력"
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
 
@@ -16,14 +15,12 @@
           v-model="confirmPassword"
           type="password"
           placeholder="새 비밀번호 확인"
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
-        <p v-if="error" class="text-sm text-red-500 mt-1">{{ error }}</p>
+        <p v-if="error" class="error-message">{{ error }}</p>
       </div>
 
       <button
         type="submit"
-        class="w-full py-2 px-4 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition"
       >
         비밀번호 변경
       </button>
@@ -98,3 +95,48 @@ export default {
   },
 };
 </script>
+<style scoped>
+.reset-form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.reset-form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.reset-form-container form div {
+  margin-bottom: 15px;
+}
+
+.reset-form-container input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.reset-form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.reset-form-container button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+}
+</style>

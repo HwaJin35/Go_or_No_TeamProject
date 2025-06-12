@@ -30,19 +30,33 @@ public class JwtUtil {
     }
 
     // AccessToken 생성
-    public String createAccessToken(Long userId, String email, String role) {
+    public String createAccessToken(Long userId, String email, String nickname, String role) {
         Date now = new Date();
         long accessTokenExpireTime = jwtProperties.getAccessTokenExpirationMinutes() * 60 * 1000; // 분 → 밀리초 변환
-        Date expiryDate = new Date(now.getTime() + accessTokenExpireTime);
+        Date expiryDate = new Date(System.currentTimeMillis() + accessTokenExpireTime);
 
         return Jwts.builder()
                 .setSubject(email)
                 .claim("userId", userId)
                 .claim("roles", role)
+                .claim("nickname", nickname)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+    
+    // RefreshToken 생성
+    public String createRefreshToken(Long userId, String email) {
+    	long refreshTokenExpireTime = jwtProperties.getRefreshTokenExpirationDays() * 24 * 60 * 60 * 1000;
+    	Date expiryDate = new Date(System.currentTimeMillis() + refreshTokenExpireTime);
+        return Jwts.builder()
+            .setSubject(email)
+            .claim("userId", userId)
+            .setIssuedAt(new Date())
+            .setExpiration(expiryDate)
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
     }
 
     // 토큰에서 정보 추출
@@ -57,6 +71,11 @@ public class JwtUtil {
             return e.getClaims();
         }
     }
+    
+    public long getUserIdFromClaim(String token) {
+    	 Claims claims = parseClaims(token);
+    	    return claims.get("userId", Number.class).longValue();
+    	}
 
     // 토큰 유효성 검사
     public boolean validateToken(String token) {

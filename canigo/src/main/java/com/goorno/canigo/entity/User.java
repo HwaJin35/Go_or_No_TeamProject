@@ -76,6 +76,10 @@ public class User extends BaseEntity {
 	// 인증토큰 만료시간
 	private LocalDateTime authTokenExpiresAt;
 	
+	// 리프레시 토큰
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private RefreshToken refreshToken;
+	
 	// 등급
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
 				orphanRemoval = true, fetch = FetchType.LAZY)
@@ -105,4 +109,13 @@ public class User extends BaseEntity {
 	
 	@Column(columnDefinition = "TEXT", length=300)
 	private String aboutMe;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Place> places = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Review> reviews = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Comment> comments = new ArrayList<>();
 	}

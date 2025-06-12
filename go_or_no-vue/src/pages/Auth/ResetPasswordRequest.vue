@@ -1,28 +1,27 @@
 <template>
-  <div class="max-w-md mx-auto mt-16 p-6 border rounded-lg shadow bg-white">
-    <h2 class="text-2xl font-semibold text-center mb-6 text-gray-800">비밀번호 찾기</h2>
-    <form @submit.prevent="requestReset" class="space-y-4">
+  <div class="reset-request-container">
+    <h2>비밀번호 찾기</h2>
+    <form @submit.prevent="requestReset" class="reset-request-form">
       <div>
         <input
           v-model="email"
           type="email"
           placeholder="가입된 이메일 주소 입력"
           required
-          class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
-        <p v-if="error" class="text-sm text-red-500 mt-1">{{ error }}</p>
+        <p v-if="error" class="error-message">{{ error }}</p>
       </div>
 
       <button
         type="submit"
         :disabled="loading || !email"
-        class="w-full py-2 px-4 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex justify-center items-center gap-2"
       >
         <img
           v-if="loading"
           src="@/assets/img/loading-spinner.gif"
           alt="로딩 중"
-          class="w-3 h-3"
+          width="30"
+          height="30"
         />
         <span>{{ loading ? "메일 전송 중..." : "재설정 메일 보내기" }}</span>
       </button>
@@ -30,7 +29,7 @@
       <!-- 완료 메시지 -->
       <p
         v-if="success"
-        class="text-sm text-green-600 font-medium text-center mt-2"
+        class="success-message"
       >
         ✅ 비밀번호 재설정 링크가 이메일로 전송되었습니다.
       </p>
@@ -62,7 +61,7 @@ export default {
           email: this.email,
         });
         this.success = true;
-        this.email = "";
+        // this.email = "";
       } catch (err) {
         const code = err.response?.data?.code;
         switch (code) {
@@ -83,3 +82,60 @@ export default {
   },
 };
 </script>
+<style scoped>
+.reset-request-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.reset-request-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.reset-request-container form div {
+  margin-bottom: 15px;
+}
+
+.reset-request-container input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.reset-request-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.reset-request-container button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.reset-request-container button:hover {
+  background-color: #45a049;
+}
+
+.success-message {
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+</style>

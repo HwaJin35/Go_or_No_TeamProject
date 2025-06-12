@@ -10,34 +10,43 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.AuditorAware;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goorno.canigo.common.jwt.JwtAuthenticationFilter;
 import com.goorno.canigo.controller.auth.LoginController;
 import com.goorno.canigo.dto.login.LoginRequestDTO;
 import com.goorno.canigo.dto.login.LoginResponseDTO;
 import com.goorno.canigo.service.auth.LoginService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 // LoginController 단위테스트
-@WebMvcTest(LoginController.class)
-@AutoConfigureMockMvc(addFilters=false)	// 테스트를 위해 시큐리티 필터 제거
+@ActiveProfiles("test")
+@WebMvcTest(
+    controllers = LoginController.class, // 이 컨트롤러만 스캔
+    excludeAutoConfiguration = {
+        SecurityAutoConfiguration.class // 스프링 시큐리티 자동 구성 제외
+    },
+    // JwtAuthenticationFilter를 ComponentScan에서 제외
+    // JwtAuthenticationFilter가 @Component, @Configuration 등으로 빈 등록될 경우,
+    // @WebMvcTest의 스캔 범위에 포함될 수 있기 때문.
+    excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = JwtAuthenticationFilter.class // JwtAuthenticationFilter 클래스 자체를 제외
+    )
+)
+@AutoConfigureMockMvc
 public class LoginControllerUnitTest {
-	// JPA Auditing 기능을 위한 AuditorAware 가짜 객체 등록
-	@TestConfiguration
-	static class TestConfig {
-		@Bean
-		public AuditorAware<String> auditorAware() {
-			return () -> java.util.Optional.of("testUser");
-		}
-	}
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -65,7 +74,7 @@ public class LoginControllerUnitTest {
 	@Test
 	@DisplayName("로그인 성공 테스트")
 	void login_success() throws Exception {		
-		when(loginService.login(any())).thenReturn(new LoginResponseDTO("fake-jwt-token", "fake-nickname","USER"));
+		when(loginService.login(any(), any(HttpServletResponse.class))).thenReturn(new LoginResponseDTO("fake-jwt-token","fake-nickname","USER"));
 		
 		mockMvc.perform(post("/api/login")
 					.contentType(MediaType.APPLICATION_JSON)
@@ -77,7 +86,7 @@ public class LoginControllerUnitTest {
 	@Test
 	@DisplayName("로그인 실패(이메일 없음) 테스트")
 	void login_fail_emailNotFound() throws Exception {
-		when(loginService.login(any())).thenThrow(new IllegalArgumentException("비밀번호가 일치하지 않습니다."));
+		when(loginService.login(any(), any(HttpServletResponse.class))).thenThrow(new IllegalArgumentException("비밀번호가 일치하지 않습니다."));
 		
 		mockMvc.perform(post("/api/login")
 					.contentType(MediaType.APPLICATION_JSON)

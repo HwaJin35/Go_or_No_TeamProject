@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class EmailAuthService {
 	
 	private final JavaMailSender mailSender;
 	private final UserRepository userRepository;
@@ -106,7 +106,7 @@ public class AuthService {
 	
 	// 이메일 코드 검증 메서드
 	@Transactional
-	public void verityCode(EmailVerifyDTO verifyDTO) {
+	public void verifyCode(EmailVerifyDTO verifyDTO) {
 		String email = verifyDTO.getEmail();
 		String inputCode = verifyDTO.getCode();
 		

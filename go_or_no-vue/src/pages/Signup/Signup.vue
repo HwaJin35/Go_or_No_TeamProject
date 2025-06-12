@@ -30,15 +30,6 @@
         >
           {{ emailCheckMessage }}
         </p>
-
-        <span v-if="checking">
-          <img
-            src="@/assets/img/loading-spinner.gif"
-            alt="로딩 중"
-            width="30"
-            height="30"
-          />
-        </span>
       </div>
 
       <!-- 인증코드 발송 및 인증확인 -->
@@ -50,17 +41,28 @@
             @click="sendCode"
             :disabled="loading || emailVerified"
           >
+          <span v-if="loading">
+          <img
+            src="@/assets/img/loading-spinner.gif"
+            alt="로딩 중"
+            width="30"
+            height="30"
+          />
+        </span>
             {{ sendCodeText }}
           </button>
         </div>
 
         <div v-if="codeSent" style="margin-top: 8px">
           <div style="display: flex; gap: 8px">
-            <input v-model="code" placeholder="인증 코드를 입력하세요" />
+            <input v-model="code" 
+                  placeholder="인증 코드를 입력하세요"
+                  style="flex: 3;"/>
             <button
               type="button"
               @click="verifyCode"
               :disabled="loading || emailVerified"
+              style="min-width: 100px; padding: 8px 10px"
             >
               인증 확인
             </button>
@@ -70,14 +72,6 @@
         <p v-if="emailVerified" style="color: green; margin-top: 8px">
           ✅ 이메일 인증 완료
         </p>
-        <span v-if="loading">
-          <img
-            src="@/assets/img/loading-spinner.gif"
-            alt="로딩 중"
-            width="30"
-            height="30"
-          />
-        </span>
       </div>
 
       <!-- 회원가입 폼 -->
@@ -355,7 +349,7 @@ export default {
 
         // 이미지가 있다면 추가
         if (this.profileImageFile) {
-          formData.append("files", this.profileImageFile);
+          formData.append("uploadFiles", this.profileImageFile);
         }
 
         await registerUser(formData);

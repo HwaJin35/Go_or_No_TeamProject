@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goorno.canigo.dto.login.LoginRequestDTO;
 import com.goorno.canigo.dto.login.LoginResponseDTO;
+import com.goorno.canigo.entity.User;
+import com.goorno.canigo.repository.UserRepository;
 
 // 회원정보 조회 통합 테스트
 @SpringBootTest
@@ -34,6 +37,9 @@ public class UserProfileIntegrationTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	private String testEmail;
 	private String testPassword;
@@ -48,21 +54,52 @@ public class UserProfileIntegrationTest {
 		testPassword = "testPassword123";
 		testNickname = "tester" + System.currentTimeMillis();
 
-		profileImage = new MockMultipartFile("files", "test.jpg", "image/jpeg",
-				"test image content".getBytes(StandardCharsets.UTF_8));
+		profileImage = new MockMultipartFile(
+				"files", "test.jpg", "image/jpeg",
+				"test image content".getBytes(StandardCharsets.UTF_8)
+				);
+		
+		// 이메일 인증 코드 요청 (DB에 유저 생성됨)
+	    mockMvc.perform(post("/api/auth/email/send")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content("{\"email\": \"" + testEmail + "\"}"))
+	        .andExpect(status().isOk());
 
+	    // 인증 코드 세팅
+	    User user = userRepository.findByEmail(testEmail)
+	            .orElseThrow(() -> new RuntimeException("테스트 유저 생성 실패"));
+	    
+	    user.setAuthToken("123456");
+	    user.setAuthTokenExpiresAt(LocalDateTime.now().plusMinutes(5));
+	    userRepository.save(user);
+
+	    // 이메일 인증
+	    mockMvc.perform(post("/api/auth/email/verify")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content("{\"email\": \"" + testEmail + "\", \"code\": \"123456\"}"))
+	        .andExpect(status().isOk());
+	    
 		// 회원가입 먼저 수행
-		mockMvc.perform(multipart("/api/users/signup").file(profileImage).param("email", testEmail)
-				.param("password", testPassword).param("nickname", testNickname).param("authProvider", "LOCAL"))
+		mockMvc.perform(multipart("/api/users/signup")
+				.file(profileImage)
+				.param("email", testEmail)
+				.param("password", testPassword)
+				.param("nickname", testNickname)
+				.param("authProvider", "LOCAL"))
 				.andExpect(status().isOk());
 
 		// 로그인하여 accessToken 획득
-		LoginRequestDTO loginRequestDTO = LoginRequestDTO.builder().email(testEmail).password(testPassword).build();
+		LoginRequestDTO loginRequestDTO = LoginRequestDTO.builder()
+				.email(testEmail)
+				.password(testPassword)
+				.build();
 
 		String responseBody = mockMvc
-				.perform(post("/api/login").contentType(MediaType.APPLICATION_JSON)
+				.perform(post("/api/login")
+						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(loginRequestDTO)))
-				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+				.andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
 
 		LoginResponseDTO loginResponse = objectMapper.readValue(responseBody, LoginResponseDTO.class);
 		accessToken = loginResponse.getAccessToken();
@@ -71,21 +108,25 @@ public class UserProfileIntegrationTest {
 	@Test
 	@DisplayName("회원정보 조회 성공 - 유효한 토큰")
 	void getMyProfile_success() throws Exception {
-		mockMvc.perform(get("/api/users/me").header("Authorization", "Bearer " + accessToken))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.email").value(testEmail))
+		mockMvc.perform(get("/api/users/me")
+				.header("Authorization", "Bearer " + accessToken))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.email").value(testEmail))
 				.andExpect(jsonPath("$.nickname").value(testNickname));
 	}
 
 	@Test
 	@DisplayName("회원정보 조회 실패 - 토큰 없음")
 	void getMyProfile_fail_noToken() throws Exception {
-		mockMvc.perform(get("/api/users/me")).andExpect(status().isUnauthorized());
+		mockMvc.perform(get("/api/users/me"))
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	@DisplayName("회원정보 조회 실패 - 잘못된 토큰")
 	void getMyProfile_fail_invalidToken() throws Exception {
-		mockMvc.perform(get("/api/users/me").header("Authorization", "Bearer wrong.token.here"))
+		mockMvc.perform(get("/api/users/me")
+				.header("Authorization", "Bearer wrong.token.here"))
 				.andExpect(status().isUnauthorized());
 	}
 }

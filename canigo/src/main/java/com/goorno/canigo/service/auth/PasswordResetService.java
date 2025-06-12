@@ -91,7 +91,8 @@ public class PasswordResetService {
     	// 토큰 여부 검사
         PasswordResetToken resetToken = tokenRepository.findByToken(confirmDTO.getToken())
                 .orElseThrow(() -> new UserException(ErrorCode.INVALID_PASSWORD_RESET_TOKEN));
-
+        
+        // 토큰 만료 시 토큰 삭제 및 예외 처리
         if (resetToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             tokenRepository.delete(resetToken); // 토큰 만료 시 삭제
             throw new UserException(ErrorCode.EXPIRED_PASSWORD_RESET_TOKEN);

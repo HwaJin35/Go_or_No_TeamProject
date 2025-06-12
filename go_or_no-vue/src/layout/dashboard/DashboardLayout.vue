@@ -92,7 +92,8 @@ import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
-import { isLoggedIn } from "../../utils/loginState";
+import { isLoggedIn, removeToken } from "../../utils/loginState";
+import axiosInstance from "../../utils/axiosInstance";
 export default {
   components: {
     TopNavbar,
@@ -112,8 +113,31 @@ export default {
       }
     },
     logout() {
-      localStorage.removeItem('accessToken');
-      isLoggedIn.value = false; // 로그아웃 시 전역 로그인 상태 false로
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        this.performLocalLogout();
+        return;
+      }
+
+      // 로그아웃 요청
+      axiosInstance.post('/api/logout', null, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      .then(() => {
+        this.performLocalLogout();
+      })
+      .catch((error) => {
+        console.error("서버 로그아웃 실패:", error);
+        this.performLocalLogout(); // 서버 실패해도 클라이언트 로그아웃은 강제 진행
+      });
+    },
+    performLocalLogout() {
+      removeToken();
+      this.nickname = null;
+      isLoggedIn.value = false;
+      this.$root.$emit('refreshUserInfo');
       alert('로그아웃 되었습니다.');
       this.$router.push('/');
     }

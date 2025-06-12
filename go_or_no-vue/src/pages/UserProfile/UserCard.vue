@@ -71,7 +71,7 @@ export default {
       immediate: true,
       handler(newUser) {
         if (newUser) {
-          this.localUser = { ...newUser }; // ✨ props 복제
+          this.localUser = { ...newUser }; // props 복제
         }
       },
     },
