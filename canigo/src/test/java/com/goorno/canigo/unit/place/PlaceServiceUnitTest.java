@@ -32,7 +32,7 @@ public class PlaceServiceUnitTest {
 	@BeforeEach
 	void setUp() {
 		placeRepository = mock(PlaceRepository.class);
-		placeService = new PlaceService(placeRepository);
+		placeService = new PlaceService(placeRepository, null);
 	}
 	
 	@Test

@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.goorno.canigo.common.util.AuthUtil;
 import com.goorno.canigo.dto.place.PlaceRequestDTO;
 import com.goorno.canigo.dto.place.PlaceResponseDTO;
 import com.goorno.canigo.entity.User;
@@ -33,6 +36,7 @@ public class PlaceController {
 
 	private final PlaceService placeService;
 	private final DataLoader dataLoader;
+	private final AuthUtil authUtil;
 	
 	// 장소 등록 API
 	// 클라이언트에서 multipart/form-data 형식으로 보낼 때만 이 메서드가 실행됨
@@ -41,7 +45,9 @@ public class PlaceController {
 		try {
 			// 유저 정보는 실제 요청에서 받아야 한다.
 			// 여기서는 임시로 user를 받아온다고 가정
-			User user = dataLoader.getDummyUser();
+//			User user = dataLoader.getDummyUser();
+			
+			User user = authUtil.getCurrentUser();
 			
 			// 장소 등록 서비스 호출
 			PlaceResponseDTO placeResponseDTO = placeService.createPlace(dto, user);
@@ -75,5 +81,17 @@ public class PlaceController {
 		return Arrays.stream(CategoryType.values())
 				.map(CategoryType::getCategoryName)
 				.collect(Collectors.toList());
+	}
+	
+	// 장소 수정 API
+	@PutMapping("/{id}")
+	public ResponseEntity<PlaceResponseDTO> updatePlace(@PathVariable("id") Long id, @RequestBody PlaceRequestDTO dto) {
+		try {
+			User user = authUtil.getCurrentUser();
+			PlaceResponseDTO updated = placeService.updatePlace(id, dto, user);
+			return ResponseEntity.ok(updated);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 }

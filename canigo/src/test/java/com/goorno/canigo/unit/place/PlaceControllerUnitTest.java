@@ -42,7 +42,7 @@ public class PlaceControllerUnitTest {
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		placeController = new PlaceController(placeService, dataLoader);
+		placeController = new PlaceController(placeService, dataLoader, null);
 		mockMvc = MockMvcBuilders.standaloneSetup(placeController).build();
 	}
 

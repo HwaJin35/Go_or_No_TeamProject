@@ -108,7 +108,7 @@ public class Place extends BaseEntity {
 	private List<PlaceFavorite> favorites = new ArrayList<>();
 	
 	// 해시태그
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
 		name = "place_hashtag",
 		joinColumns = @JoinColumn(name = "place_id"), // 현재 엔티티의 외래키

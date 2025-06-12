@@ -42,6 +42,9 @@
                         v-model="form.hashtags"
                         type="text"
                         placeholder="해시태그를 입력하세요(예: #맛집 #카페)"
+                        pattern="^#([가-힣a-zA-Z0-9]+)(\s*#([가-힣a-zA-Z0-9]+))*$"
+                        title="해시태그는 #맛집#카페 또는 #맛집 #카페 형태여야 합니다. 또한, 초성만 입력할 수 없습니다."
+                        required
                     />
                 </div>
 
@@ -122,9 +125,33 @@ export default {
             // });
         },
 
+        // 해시태그 형식 검사 및 변환
+        validateAndProcessHashtags(rawHashtags) {
+            const hashtagPattern = /^#([가-힣a-zA-Z0-9]+)(\s*#([가-힣a-zA-Z0-9]+))*$/;
+
+            if (!hashtagPattern.test(rawHashtags.trim())) {
+                return null;
+            }
+            // '#'로 나누고, 빈 값 제거
+            const processed = rawHashtags
+                .split('#')
+                .filter(tag => tag.trim() !== "")
+                .map(tag => tag.trim());
+                
+            return processed;
+        },
+
         // 폼 제출 시 데이터 서버로 전송
         async handleSubmit() {
             // console.log("선택된 카테고리:", this.form.category);
+
+            // 해시태그 검사 및 변환
+            const processedHashtags = this.validateAndProcessHashtags(this.form.hashtags);
+            if (processedHashtags === null) {
+                return; // 형식 오류 시 제출 중단
+            }
+
+            this.form.hashtags = processedHashtags;
 
             try {
                 // 모든 파일을 base64로 변환 완료 후 서버로 전송
@@ -156,14 +183,35 @@ export default {
         // 팝업 열기
         showPopup(latLng) {
             this.selectedLatLng = latLng;
-            this.form.latitude = latLng.getLat(); // 위도
-            this.form.longitude = latLng.getLng(); // 경도
+            
+            // form을 새 객체로 초기화
+            this.form = {
+                name: "",
+                description: "",
+                category: "",
+                hashtags: "",
+                uploadFiles: [],
+                latitude: latLng.getLat(),
+                longitude: latLng.getLng(),
+            };
+
             this.isVisible = true; // 팝업을 보여주기 위해 true로 설정
         },
         
         // 팝업 닫기
         closePopup() {
             this.isVisible = false;
+
+            // 팝업 닫을 때도 form 초기화
+            this.form = {
+                name: "",
+                description: "",
+                category: "",
+                hashtags: "",
+                uploadFiles: [],
+                latitude: null,
+                longitude: null,
+            };
         }
     }
 }

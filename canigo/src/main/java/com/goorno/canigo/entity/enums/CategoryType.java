@@ -30,4 +30,12 @@ public enum CategoryType {
 		throw new IllegalArgumentException("Unknown categoryName: " + categoryName);
 	}
 	
+	public static CategoryType fromName(String name) {
+	    try {
+	        return CategoryType.valueOf(name);
+	    } catch (IllegalArgumentException e) {
+	        throw new IllegalArgumentException("Unknown categoryName: " + name);
+	    }
+	}
+	
 }
